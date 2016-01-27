@@ -1,0 +1,66 @@
+\documentclass[11pt, letterpaper]{article}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[frenchb]{babel}
+\usepackage[top=3cm, bottom=3cm, left=2cm, right=2cm]{geometry}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+
+\newcommand{\hmark}{\rule{\linewidth}{0.5mm}}
+
+\begin{document}
+\begin{titlepage}
+\pagenumbering{gobble}
+
+\centering
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[width=8cm]{upmc.png}
+\end{center}
+\end{figure}
+
+\hmark \\[0.5cm]
+\textsc{\textbf{\Large Mod\`{e}les graphiques pour le choix social computationnel}} \\[0.5cm]
+\textsc{P-ANDROIDE} \\[0.5cm]
+\hmark \\[5cm]
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft}
+Thibault \textsc{Gigant}\\
+Laura \textsc{Greige}
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{Encadrant:}\\
+Olivier \textsc{Spanjaard}
+\end{flushright}
+\end{minipage}\\[4cm]
+
+\large Ann\'{e}e 2015 - 2016
+
+\end{titlepage}
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\pagenumbering{arabic}
+
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{1pt}
+\lhead{\textbf{P-ANDROIDE -- Mod\`{e}les graphiques pour le choix social computationnel}}
+
+\section*{Introduction}
+\addcontentsline{toc}{section}{Introduction}
+
+\newpage
+
+\section*{Conclusion}
+\addcontentsline{toc}{section}{Conclusion}
+
+\end{document}
