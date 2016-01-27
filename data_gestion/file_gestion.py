@@ -6,18 +6,23 @@ def read_file(filename):
     """
     Reads the file and returns data content
     :param filename: absolute or relative path to the file
-    :return:
+    :type filename: str
+    :raise ValueError: if file doesn't exist or wrong file format
+    :return: map with all data from the file
     """
 
     # Opening file
-    fp = open(filename, "r")
+    try:
+        fp = open(filename, "r")
+    except:
+        raise ValueError("ERROR: File doesn't exist")
 
     file_error_message = "ERROR: Wrong file format"
     # Candidates related data
     try:
         nb_candidates = int(fp.readline())
     except:
-        sys.exit(file_error_message)
+        raise ValueError(file_error_message)
     # Map of candidates
     try:
         candidates = {}
@@ -25,13 +30,13 @@ def read_file(filename):
             line = fp.readline().split(",")
             candidates[int(line[0].strip())] = line[1].strip()
     except:
-        sys.exit(file_error_message)
+        raise ValueError(file_error_message)
 
     # Number of voters, Sum of Vote Count, Number of Unique Orders
     try:
         nb_voters, sum_vote_count, nb_unique_orders = [int(i.strip()) for i in fp.readline().split(",")]
     except:
-        sys.exit(file_error_message)
+        raise ValueError(file_error_message)
 
     # Lists of preferences
     try:
@@ -65,7 +70,7 @@ def read_file(filename):
 
             prefs.append(temp)
     except:
-        sys.exit(file_error_message)
+        raise ValueError(file_error_message)
 
     test = fp.readline()
     if test:
@@ -77,11 +82,18 @@ def read_file(filename):
     # Closing file
     fp.close()
 
-    return candidates, prefs
+    return {"nb_candidates": nb_candidates,
+            "candidates": candidates,
+            "nb_voters": nb_voters,
+            "sum_vote_count": sum_vote_count,
+            "nb_unique_orders": nb_unique_orders,
+            "preferences": prefs}
 
 
 if __name__ == '__main__':
-    filename = sys.argv[1]
-    candidates, prefs = read_file(filename)
-    print(candidates)
-    print(prefs)
+    if len(sys.argv) != 2:
+        sys.exit("This program takes one and only one argument")
+    file = sys.argv[1]
+    structure = read_file(file)
+    print(structure["candidates"])
+    print(structure["preferences"])
