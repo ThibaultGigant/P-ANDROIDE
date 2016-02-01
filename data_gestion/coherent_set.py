@@ -1,7 +1,8 @@
 #! /usr/bin/env sage -python
 # -*- coding: utf-8 -*-
 import sys
-#from data_gestion.file_gestion import read_file
+from file_gestion import read_file
+import generation
 from sage.graphs.pq_trees import reorder_sets
 from itertools import chain, combinations
 
@@ -21,22 +22,28 @@ def get_max_coherent_set(structure):
         else:
             L+=[ballot[1][:-1]]
     subsets=list(chain.from_iterable(combinations(L,n) for n in range(len(L)+1)))
-    ### Add singletons
-    try:
-        for s in subsets:
+    for s in subsets:
+        try:
+            Ls=list(s)
+            elements=set(chain.from_iterable(s))
+            Ls.extend([i] for i in list(elements))
             reorder_sets(s)
+        except ValueError:
+            continue
+        else:
             if len(s)>m:
                 m=len(s)
                 l_set=s
-    except:
-        raise ValueError("Incoherence")
     return m,l_set
 
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        sys.exit("This program takes one and only one argument")
-    filename = sys.argv[1]
-    structure = read_file(filename)
-    print(structure["candidates"])
-    print(structure["preferences"])
+    #if len(sys.argv) != 2:
+    #    sys.exit("This program takes one and only one argument")
+    #filename = sys.argv[1]
+    #structure = read_file(filename)
+    #print(structure["candidates"])
+    #print(structure["preferences"])
+    structure=generation.generation(5,3)
+    print structure
     size,largest_coherent_set=get_max_coherent_set(structure)
+    print(size,largest_coherent_set)
