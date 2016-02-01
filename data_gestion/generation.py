@@ -13,7 +13,7 @@ def bfs(cand_list, favorite):
     """
     left_right = [-1, 1]
     pref = [cand_list[favorite]]
-    for i in range(1, min(favorite+1, len(cand_list) - favorite + 1)):
+    for i in range(1, len(cand_list)):
         c = choice(left_right)
         if len(cand_list) > favorite + i * c >= 0:
             pref.append(cand_list[favorite + i * c])
@@ -34,7 +34,8 @@ def generation(nb_candidates, nb_ballots, nb_prefs = None):
     # Creation of the map of candidates
     candidates = {i: "Candidate " + str(i) for i in range(nb_candidates+1)}
     # Creation of a list of candidates, shuffled to simulate some sort of classification
-    cand_list = shuffle(list(range(1, nb_candidates+1)))
+    cand_list = list(range(1, nb_candidates+1))
+    shuffle(cand_list)
 
     # Creation of ballots
     ballots = []
@@ -43,13 +44,21 @@ def generation(nb_candidates, nb_ballots, nb_prefs = None):
         favorite = randint(0, nb_candidates-1)  # favorite candidate for this ballot
         pref = bfs(cand_list, favorite)
         if rand_prefs:
-            nb_prefs = randint(nb_candidates)  # number of strict preferences for this ballot
-        ballots.append(pref[:nb_prefs] + Set(pref[nb_prefs:]))
+            nb_prefs = randint(1, nb_candidates)  # number of strict preferences for this ballot
+        temp = pref[:nb_prefs]
+        temp.append(Set(pref[nb_prefs:]))
+        ballots.append(temp)
 
-    ballots_set = Set(ballots)
+    # Creation of the list of preferences
     prefs = []
-    for ballot in ballots_set:
-        prefs.append((ballots.count(ballot), ballot))
+    while ballots:
+        ballot = ballots.pop()
+        prefs.append((ballots.count(ballot)+1, ballot))
+        while ballot in ballots:
+            ballots.remove(ballot)
+
+    # Sort preferences by number of voters
+    prefs.sort(key=lambda x: x[0], reverse=True)
 
     return {"nb_candidates": nb_candidates,
             "candidates": candidates,
