@@ -1,6 +1,7 @@
+#! /usr/bin/env sage -python
 # -*- coding: utf-8 -*-
 import sys
-from .file_gestion import read_file
+from data_gestion.file_gestion import read_file
 
 
 def get_max_coherent_set(structure):

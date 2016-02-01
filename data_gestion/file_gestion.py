@@ -1,5 +1,7 @@
+#! /usr/bin/env sage -python
 # -*- coding: utf-8 -*-
 import sys
+from sage.all import Set
 
 
 def read_file(filename):
@@ -50,7 +52,7 @@ def read_file(filename):
 
             # temp is the preference for a set of people :
             # the number of people having this preference, a strict order of preferences
-            # If indifferent between candidates, a list of them is in the list of preferences
+            # If indifferent between candidates, a Set (from sagemath) of them is added to the list of preferences
             temp = (count, [])
             i = 0
             while i < len(pref):
@@ -65,7 +67,7 @@ def read_file(filename):
                         i += 1
                         p = pref[i]
                     indiff.append(int(p[:-1]))
-                    temp[1].append(indiff)
+                    temp[1].append(Set(indiff))
                 i += 1
 
             prefs.append(temp)
@@ -95,5 +97,7 @@ if __name__ == '__main__':
         sys.exit("This program takes one and only one argument")
     file = sys.argv[1]
     structure = read_file(file)
-    print(structure["candidates"])
-    print(structure["preferences"])
+    for c in structure["candidates"].items():
+        print(c)
+    for j in structure["preferences"]:
+        print(j)
