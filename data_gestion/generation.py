@@ -32,7 +32,7 @@ def generation(nb_candidates, nb_ballots, nb_prefs = None):
     """
 
     # Creation of the map of candidates
-    candidates = {i: "Candidate " + str(i) for i in range(nb_candidates+1)}
+    candidates = {i: "Candidate " + str(i) for i in range(1, nb_candidates+1)}
     # Creation of a list of candidates, shuffled to simulate some sort of classification
     cand_list = list(range(1, nb_candidates+1))
     shuffle(cand_list)
