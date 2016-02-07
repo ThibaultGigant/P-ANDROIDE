@@ -25,7 +25,7 @@ def get_max_coherent_set(structure):
 
     # Creation of all subsets combinations: enumeration of all possible subsets
     subsets = chain.from_iterable(combinations(L, n) for n in range(1, len(L) + 1))
-    print subsets
+
     # Creation of a list of singletons that should be added to each subset of ballots, to avoid problems
     singletons = [Set([i]) for i in structure["candidates"].keys()]
     # Testing each subset to see if it's coherent ==> recuperation of the largest subset
@@ -34,9 +34,8 @@ def get_max_coherent_set(structure):
             Ls = list(subset)
             # Adding singletons to avoid strange cases like cycles or trees in candidates representation
             Ls += singletons
-            print("Ls: ", Ls)
             reorder_sets(Ls)
-            print("Coherent")
+
             if len(subset) >= m:
                 m = len(subset)
                 l_set = subset
