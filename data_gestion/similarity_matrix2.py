@@ -2,40 +2,114 @@
 # -*- coding: utf-8 -*-
 
 from sage.all import Set, matrix
-from itertools import permutations, combinations
+from itertools import permutations, combinations, starmap
 from generation import generation
+from file_gestion import read_file
+from time import time
+import sys
 
 
-def create_similarity_matrix(structure):
+def dissimilarity_and_n(structure, candidate1, candidate2):
+    """
+    Calculates the dissimilarity between candidate1 and candidate2 like this:
+    1 - number_of_ballots_with_candidate1_AND_candidate2/total_number_of_ballots
+    :param structure: data extracted from an election file
+    :param candidate1: ID of a candidate
+    :param candidate2: ID of a candidate
+    :return: dissimilarity score
+    :rtype: int
+    """
+    # if the candidates are identical, their dissimilarity is 0, nothing else to do
+    if candidate1 == candidate2:
+        return 0
+
+    # Variables initialization
+    ballots = structure["preferences"]
+    vote_count = float(structure["sum_vote_count"])
+    score = 0
+    # Calculating number of ballots with the 2 candidates
+    for ballot in ballots:
+        if candidate1 in ballot[1] and candidate2 in ballot[1]:
+            score += ballot[0]
+
+    return 1-score/vote_count
+
+
+def dissimilarity_and_or(structure, candidate1, candidate2):
+    """
+    Calculates the dissimilarity between candidate1 and candidate2 like this:
+    1 - number_of_ballots_with_candidate1_AND_candidate2/number_of_ballots_with_candidate1_OR_candidate2
+    :param structure: data extracted from an election file
+    :param candidate1: ID of a candidate
+    :param candidate2: ID of a candidate
+    :return: dissimilarity score
+    :rtype: int
+    """
+    # if the candidates are identical, their dissimilarity is 0, nothing else to do
+    if candidate1 == candidate2:
+        return 0
+
+    # Variables initialization
+    ballots = structure["preferences"]
+    score = 0
+    nb_cand1_or_cand2 = 0
+    # Calculating number of ballots with the 2 candidates
+    for ballot in ballots:
+        if candidate1 in ballot[1] and candidate2 in ballot[1]:
+            score += ballot[0]
+        if candidate1 in ballot[1] or candidate2 in ballot[1]:
+            nb_cand1_or_cand2 += ballot[0]
+
+    return 1-score/float(nb_cand1_or_cand2)
+
+
+def dissimilarity_over_over(structure, candidate1, candidate2):
+    """
+    Calculates the dissimilarity between candidate1 and candidate2 like this:
+    1 - sum(1/|ballot_with_candidate1_and_candidate2|)/sum(1/|ballot_with_candidate1_OR_candidate2|)
+    :param structure: data extracted from an election file
+    :param candidate1: ID of a candidate
+    :param candidate2: ID of a candidate
+    :return: dissimilarity score
+    :rtype: int
+    """
+    # if the candidates are identical, their dissimilarity is 0, nothing else to do
+    if candidate1 == candidate2:
+        return 0
+
+    # Variables initialization
+    ballots = structure["preferences"]
+    score = 0
+    nb_cand1_or_cand2 = 0
+    # Calculating number of ballots with the 2 candidates
+    for ballot in ballots:
+        if candidate1 in ballot[1] and candidate2 in ballot[1]:
+            score += 1.0/ballot[0]
+        if candidate1 in ballot[1] or candidate2 in ballot[1]:
+            nb_cand1_or_cand2 += 1.0/ballot[0]
+
+    return 1-score/float(nb_cand1_or_cand2)
+
+
+def create_similarity_matrix(structure, dissimilarity_function):
     """
     Creates the similarity matrix between candidates, given the preferences stored in the structure
     :param structure: data extracted from an election file
+    :type structure: dict
+    :param dissimilarity_function: function to use to calculate dissimilarity between 2 candidates
+    :type dissimilarity_function: function pointer
     :return: similarity matrix
     :rtype: matrix
     """
     # Variables initialization
     nb_candidates = structure["nb_candidates"]
     similarity_m = [[0 for _ in range(nb_candidates)] for _ in range(nb_candidates)]
-    preferences = structure["preferences"]
-    vote_count = float(structure["sum_vote_count"])
+    pairs_of_candidates = list(combinations(structure["candidates"].keys(), 2))
 
-    for ballot in preferences:
-        # Removing set of indifference if any
-        if isinstance(ballot[1][-1], int):
-            temp = ballot[1]
-        else:
-            temp = ballot[1][:-1]
-        # Updating the similarity matrix for each pair of candidates in the ballot
-        if len(temp) >= 2:
-            # recuperation of pairs of candidates in the ballot
-            pairs = combinations(temp, 2)
-            for candidate1, candidate2 in pairs:
-                similarity_m[candidate1-1][candidate2-1] += 1 * ballot[0]
-                similarity_m[candidate2-1][candidate1-1] += 1 * ballot[0]
-
-    for line in range(nb_candidates):
-        for element in range(nb_candidates):
-            similarity_m[line][element] = 1 - similarity_m[line][element]/vote_count
+    for candidate1, candidate2 in pairs_of_candidates:
+        similarity = dissimilarity_function(structure, candidate1, candidate2)
+        similarity_m[candidate1-1][candidate2-1] = similarity
+        similarity_m[candidate2-1][candidate1-1] = similarity
 
     return matrix(similarity_m)
 
@@ -92,7 +166,7 @@ def get_weighted_matrix_score(mat):
     return wscore_m
 
 
-def find_permutation_naive(structure, weighted=False):
+def find_permutation_naive(structure, dissimilarity_function, weighted=False):
     """
     Calculate the similarity matrix between candidates then finds the permutation maximizing the matrix gradient score
     :param structure: data extracted from an election file
@@ -104,17 +178,26 @@ def find_permutation_naive(structure, weighted=False):
     # Variables initialization
     candidates_id = range(structure["nb_candidates"])
     candidates_permutations = list(permutations(candidates_id, structure["nb_candidates"]))
-    similarity_matrix = create_similarity_matrix(structure)
+    similarity_matrix = create_similarity_matrix(structure, dissimilarity_function=dissimilarity_function)
+
+    candidates_permutations = candidates_permutations[:len(candidates_permutations)/2]
 
     # Calculating scores for all possible permutations
     if weighted:
-        scores = [get_weighted_matrix_score(similarity_matrix.matrix_from_rows_and_columns(list(i), list(i))) for i in candidates_permutations]
+        score = get_weighted_matrix_score(similarity_matrix.matrix_from_rows_and_columns(list(candidates_permutations[0]), list(candidates_permutations[0])))
     else:
-        scores = [get_matrix_score(similarity_matrix.matrix_from_rows_and_columns(list(i), list(i))) for i in candidates_permutations]
+        score = get_matrix_score(similarity_matrix.matrix_from_rows_and_columns(list(candidates_permutations[0]), list(candidates_permutations[0])))
+    optimal_permutation = candidates_permutations[0]
+    for i in range(1, len(candidates_permutations)):
+        if weighted:
+            temp = get_weighted_matrix_score(similarity_matrix.matrix_from_rows_and_columns(list(candidates_permutations[i]), list(candidates_permutations[i])))
+        else:
+            temp = get_matrix_score(similarity_matrix.matrix_from_rows_and_columns(list(candidates_permutations[i]), list(candidates_permutations[i])))
+        if temp < score:
+            score = temp
+            optimal_permutation = candidates_permutations[i]
 
-    # Recuperation of the best permutation's index, then returning the corresponding permutation
-    max_score_index = scores.index(min(scores))
-    return candidates_permutations[max_score_index]
+    return optimal_permutation
 
 
 ################################################
@@ -127,13 +210,13 @@ def example1():
                  'candidates': {1: 'Candidate 1', 2: 'Candidate 2', 3: 'Candidate 3', 4: 'Candidate 4', 5: 'Candidate 5'},
                  'nb_unique_orders': 3,
                  'nb_voters': 6}
-    mat = create_similarity_matrix(structure)
+    mat = create_similarity_matrix(structure, dissimilarity_function=dissimilarity_and_or)
     print("Similarity Matrix")
     print(mat)
     print("Gradient score: ", get_matrix_score(mat))
     print("Weighted Gradient score: ", get_weighted_matrix_score(mat))
 
-    optimal_permutation = find_permutation_naive(structure)
+    optimal_permutation = find_permutation_naive(structure, dissimilarity_and_or)
     print("Optimal permutation: ", optimal_permutation)
     print("Similarity matrix after permutation:")
     print(mat.matrix_from_rows_and_columns(list(optimal_permutation), list(optimal_permutation)))
@@ -141,13 +224,64 @@ def example1():
 
 def example2():
     structure = generation(7, 20)
-    mat = create_similarity_matrix(structure)
+    mat = create_similarity_matrix(structure, dissimilarity_function=dissimilarity_and_or)
     print("Similarity Matrix")
     print(mat)
     print("Gradient score: ", get_matrix_score(mat))
     print("Weighted Gradient score: ", get_weighted_matrix_score(mat))
 
-    optimal_permutation = find_permutation_naive(structure)
+    optimal_permutation = find_permutation_naive(structure, dissimilarity_and_or)
+    print("Optimal permutation: ", [i+1 for i in optimal_permutation])
+    print("Similarity matrix after permutation:")
+    print(mat.matrix_from_rows_and_columns(list(optimal_permutation), list(optimal_permutation)))
+
+
+def example3():
+    structure = generation(7, 20)
+    mat = create_similarity_matrix(structure, dissimilarity_function=dissimilarity_over_over)
+    print("Similarity Matrix")
+    print(mat)
+    print("Gradient score: ", get_matrix_score(mat))
+    print("Weighted Gradient score: ", get_weighted_matrix_score(mat))
+
+    optimal_permutation = find_permutation_naive(structure, dissimilarity_over_over, weighted=True)
+    print("Optimal permutation: ", [i+1 for i in optimal_permutation])
+    print("Similarity matrix after permutation:")
+    print(mat.matrix_from_rows_and_columns(list(optimal_permutation), list(optimal_permutation)))
+
+
+def example4():
+    structure = generation(7, 10000, 3)
+    mat = create_similarity_matrix(structure, dissimilarity_function=dissimilarity_over_over)
+    print("Similarity Matrix")
+    print(mat)
+    print("Gradient score: ", get_matrix_score(mat))
+    print("Weighted Gradient score: ", get_weighted_matrix_score(mat))
+
+    t = time()
+    optimal_permutation = find_permutation_naive(structure, dissimilarity_over_over)
+    t = time() - t
+    print(t, "seconds")
+    print("Optimal permutation: ", [i+1 for i in optimal_permutation])
+    print("Similarity matrix after permutation:")
+    print(mat.matrix_from_rows_and_columns(list(optimal_permutation), list(optimal_permutation)))
+
+
+def example5():
+    if len(sys.argv) != 2:
+        raise IOError("This program takes one and only one argument, an election file")
+    file = sys.argv[1]
+    structure = read_file(file)
+    mat = create_similarity_matrix(structure, dissimilarity_function=dissimilarity_and_or)
+    print("Similarity Matrix")
+    print(mat)
+    print("Gradient score: ", get_matrix_score(mat))
+    print("Weighted Gradient score: ", get_weighted_matrix_score(mat))
+
+    t = time()
+    optimal_permutation = find_permutation_naive(structure, dissimilarity_and_or)
+    t = time() - t
+    print(t, "seconds")
     print("Optimal permutation: ", [i+1 for i in optimal_permutation])
     print("Similarity matrix after permutation:")
     print(mat.matrix_from_rows_and_columns(list(optimal_permutation), list(optimal_permutation)))
@@ -155,4 +289,7 @@ def example2():
 
 if __name__ == '__main__':
     # example1()
-    example2()
+    # example2()
+    # example3()
+    example4()
+    # example5()

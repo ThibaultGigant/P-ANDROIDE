@@ -3,6 +3,7 @@
 import sys
 from sage.all import Set
 
+
 def read_file(filename):
     """
     Reads the file and returns data content

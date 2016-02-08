@@ -6,23 +6,27 @@ from sage.all import Set
 
 def bfs(cand_list, favorite):
     """
-    Creates a list simulating a BFS from the element with the given index
+    Creates a list from the element with the given index
     :param cand_list: sorted list of candidates (their ID)
-    :param favorite: index of the favorite, to place first in the list
+    :param favorite: index of the favorite candidate, to place first in the list
     :return: list simulating a BFS from the element with the given index
     """
-    left_right = [-1, 1]
+    left_right = [list(reversed(cand_list[:favorite])), cand_list[favorite+1:]]
     pref = [cand_list[favorite]]
-    for i in range(1, len(cand_list)):
-        c = choice(left_right)
-        if len(cand_list) > favorite + i * c >= 0:
-            pref.append(cand_list[favorite + i * c])
-        if len(cand_list) > favorite + i * -c >= 0:
-            pref.append(cand_list[favorite + i * -c])
+    # if there's an empty list, you can't choose from it...
+    if [] in left_right:
+        left_right.remove([])
+    # picking a candidate to add to the list on one side (left or right) of the already chosen candidates
+    while left_right:
+        pick = choice(left_right)
+        pref.append(pick.pop(0))
+        if not pick:
+            left_right.remove(pick)
+
     return pref
 
 
-def generation(nb_candidates, nb_ballots, nb_prefs = None):
+def generation(nb_candidates, nb_ballots, nb_prefs=None):
     """
     Randomly generates fictional ballots
     :param nb_candidates: number of candidates
@@ -42,7 +46,7 @@ def generation(nb_candidates, nb_ballots, nb_prefs = None):
     ballots = []
     rand_prefs = nb_prefs is None
     for _ in range(nb_ballots):
-        favorite = randint(0, nb_candidates-1)  # favorite candidate for this ballot
+        favorite = randint(0, nb_candidates-1)  # index of favorite candidate for this ballot
         pref = bfs(cand_list, favorite)
         if rand_prefs:
             nb_prefs = randint(1, nb_candidates)  # number of strict preferences for this ballot
@@ -67,3 +71,9 @@ def generation(nb_candidates, nb_ballots, nb_prefs = None):
             "sum_vote_count": nb_ballots,
             "nb_unique_orders": len(prefs),
             "preferences": prefs}
+
+
+if __name__ == '__main__':
+    structure = generation(10, 10, 3)
+    for i in structure["preferences"]:
+        print(i)
