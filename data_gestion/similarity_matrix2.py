@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from sage.all import Set, matrix
-from itertools import permutations, combinations, starmap
+from itertools import permutations, combinations
 from generation import generation
 from file_gestion import read_file
 from time import time
@@ -169,7 +169,9 @@ def get_weighted_matrix_score(mat):
 def find_permutation_naive(structure, dissimilarity_function, weighted=False):
     """
     Calculate the similarity matrix between candidates then finds the permutation maximizing the matrix gradient score
+    by testing all possible permutation
     :param structure: data extracted from an election file
+    :param dissimilarity_function: function used to calculate the dissimilarity between 2 candidates
     :param weighted: if True, matrices scores are calculated with the weighted gradient
     :type weighted: bool
     :return: list of candidates indices = axis of candidates
@@ -179,6 +181,8 @@ def find_permutation_naive(structure, dissimilarity_function, weighted=False):
     candidates_id = range(structure["nb_candidates"])
     candidates_permutations = list(permutations(candidates_id, structure["nb_candidates"]))
     similarity_matrix = create_similarity_matrix(structure, dissimilarity_function=dissimilarity_function)
+
+    t = time()
 
     candidates_permutations = candidates_permutations[:len(candidates_permutations)/2]
 
@@ -197,7 +201,65 @@ def find_permutation_naive(structure, dissimilarity_function, weighted=False):
             score = temp
             optimal_permutation = candidates_permutations[i]
 
+    t = time() - t
+    print("Naive algorithm: ", t, "seconds")
+    print("Optimal permutation: ", [i+1 for i in optimal_permutation])
+    print("Similarity matrix after permutation:")
+
     return optimal_permutation
+
+
+def distance(similarity_matrix, candidates_set, candidate):
+    """
+    Calculatest the "distance" between a set of candidates and a given candidate,
+    by adding the dissimilarity between each candidate in the set and the given candidate
+    :param similarity_matrix: similarity matrix between candidates
+    :param candidates_set: set of candidates
+    :param candidate: candidate to be compared to the others
+    :type similarity_matrix: matrix
+    :type candidates_set: Set
+    :type candidate: int
+    :return: "distance" between the set of candidates and the given candidate
+    :rtype: float
+    """
+    # print(candidates_set, candidate, sum([(similarity_matrix[i-1][candidate-1])**2 for i in candidates_set]))
+    return sum([(similarity_matrix[i-1][candidate-1])**2 for i in candidates_set])
+
+
+def find_permutation_dynamic_programming(similarity_matrix, candidates_set, function_map):
+    """
+    Finds the permutation maximizing the gradient score with a dynamic programming algorithm
+    :param similarity_matrix: similarity matrix between candidates
+    :param candidates_set: set of candidates used on this iteration
+    :param function_map: map whose keys are sets of candidates and values are a tuple (score, optimal permutation so far)
+    :type similarity_matrix: matrix
+    :type candidates_set: Set
+    :type function_map: dict
+    :return: map of sets of candidates and tuple, containing the optimal permutation
+    :rtype: dict
+    """
+    # If it has already been calculated, just return the result
+    if candidates_set in function_map:
+        return function_map
+
+    # else if it has only one element, the score is 0 and the optimal permutation is a 1-element list
+    if candidates_set.cardinality() == 1:
+        function_map[candidates_set] = (0, [candidates_set.an_element()])
+        return function_map
+
+    # else, recursive call on all combinations
+    candidates_combinations = list(combinations(candidates_set, candidates_set.cardinality()-1))
+    temp = []
+    for combination in candidates_combinations:
+        comb = Set(combination)
+        current_candidate = candidates_set.symmetric_difference(comb).an_element()
+        function_map = find_permutation_dynamic_programming(similarity_matrix, comb, function_map)
+        score = function_map[comb][0] + distance(similarity_matrix, comb, current_candidate)
+        temp.append((comb, current_candidate, score))
+    maximum = max(temp, key=lambda x: x[2])  # tuple with the maximum score of this iteration
+    # print(temp, maximum)
+    function_map[candidates_set] = (maximum[2], function_map[maximum[0]][1] + [maximum[1]])
+    return function_map
 
 
 ################################################
@@ -287,9 +349,31 @@ def example5():
     print(mat.matrix_from_rows_and_columns(list(optimal_permutation), list(optimal_permutation)))
 
 
+def example6():
+    structure = generation(7, 10000, 3)
+    mat = create_similarity_matrix(structure, dissimilarity_function=dissimilarity_over_over)
+    print("Similarity Matrix")
+    print(mat)
+    print("Gradient score: ", get_matrix_score(mat))
+    print("Weighted Gradient score: ", get_weighted_matrix_score(mat))
+
+    t = time()
+    dico = find_permutation_dynamic_programming(mat, Set(structure["candidates"].keys()), {})
+    t = time() - t
+    print("Dynamic programming algorithm: ", t, "seconds")
+    print("Optimal permutation: ", dico[Set(structure["candidates"].keys())][1])
+    print("Similarity matrix after permutation:")
+    optimal_permutation = [i-1 for i in dico[Set(structure["candidates"].keys())][1]]
+    print(mat.matrix_from_rows_and_columns(optimal_permutation, optimal_permutation))
+
+    optimal_permutation = find_permutation_naive(structure, dissimilarity_over_over)
+    print(mat.matrix_from_rows_and_columns(list(optimal_permutation), list(optimal_permutation)))
+
+
 if __name__ == '__main__':
     # example1()
     # example2()
     # example3()
-    example4()
+    # example4()
     # example5()
+    example6()
