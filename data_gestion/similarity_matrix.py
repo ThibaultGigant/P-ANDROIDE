@@ -130,5 +130,5 @@ if __name__ == '__main__':
                  'nb_voters': 6}
     mat = create_similarity_matrix(structure)
     print(mat)
-    print(get_matrix_score(mat))
-    print(get_weighted_matrix_score(mat))
+    #print(get_matrix_score(mat))
+    #print(get_weighted_matrix_score(mat))
