@@ -7,7 +7,7 @@
 \usepackage{graphicx}
 \usepackage{url}
 \usepackage{hyperref}
-\usepackage[a4paper, top=1.5cm, bottom=1.5cm, left=1.5cm, right=1.5cm]{geometry}
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}
 
 \usepackage{amsthm}
 \usepackage{amsmath}
@@ -163,6 +163,15 @@ Olivier \textsc{Spanjaard}\\ % Supervisor's Name
 \end{titlepage}
 
 \section*{Introduction}
+Habituellement, lors d'un vote , l'électeur est amené à choisir un unique candidat parmi une multitude. Ainsi, il est très facile de compartimenter les votants à partir de leur vote, connaissant les affiliations de chaque candidat. En revanche, lorsqu'il est donné la possibilité aux électeurs de ne plus voter pour un seul candidat, mais pour un sous-ensemble d'entre eux qu'il approuverait, la tache se complique. Avec cette procédure de vote, qu'on dit par approbation, il peut être intéressant de voir le problème sous un autre angle. On peut étudier les différents votes formulés et tenter d'en extraire un axe \og gauche-droite \fg{} classant les candidats les uns par rapport aux autres en fonction de leur proximité.
+
+Il existe des algorithmes pour résoudre ce problème, et dans ce projet deux principales méthodes seront utilisées :
+\begin{itemize}
+	\item Réaliser un \og Branch \& Bound \fg{} sur l'ensemble des bulletins de vote pour identifier un sous-ensemble le plus large possible de bulletins cohérents avec un axe.
+	\item Utiliser un algorithme de sériation permettant de calculer l'axe qui crée le moins d'incohérences possibles dans une matrice de similarité entre les candidats, créée grâce aux bulletins de vote.
+\end{itemize}
+
+Ces deux approches seront plus amplement détaillées dans la première partie de ce cahier des charges. Quant à la seconde partie, elle sera dédiée à la réalisation qui sera faite de ce problème.
 
 \section{Les deux approches : Branch \& Bound et S\'{e}riation}
 
@@ -173,5 +182,8 @@ Olivier \textsc{Spanjaard}\\ % Supervisor's Name
 
 \section{R\'{e}alisation}
 
+\subsection{Implémentation des algorithmes}
+
+\subsection{Interface Utilisateur}
 
 \end{document}
