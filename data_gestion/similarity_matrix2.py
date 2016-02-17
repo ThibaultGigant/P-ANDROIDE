@@ -350,7 +350,8 @@ def example5():
 
 
 def example6():
-    structure = generation(7, 10000, 3)
+    structure, axis = generation(7, 10000, 3)
+    print("Generated axis: "+str(axis))
     mat = create_similarity_matrix(structure, dissimilarity_function=dissimilarity_over_over)
     print("Similarity Matrix")
     print(mat)

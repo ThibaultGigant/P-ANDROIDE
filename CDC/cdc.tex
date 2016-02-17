@@ -1,0 +1,177 @@
+\documentclass[12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[francais]{babel}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage[a4paper, top=1.5cm, bottom=1.5cm, left=1.5cm, right=1.5cm]{geometry}
+
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{mathrsfs}
+\usepackage{dsfont}
+\usepackage{fourier-orns}
+\usepackage{xcolor} % \colorbox{yellow}{texte} surlignera alors le texte avec la couleur jaune
+
+\usepackage{dsfont} % pour l'indicatrice : \mathds{1} produira un 1 comme l'indicatrice
+\usepackage{float}
+
+
+\newtheorem{Lem}{Lemme}[section]
+\newtheorem{Theo}{Th\'{e}or\`{e}me}[section]
+\newtheorem{Cor}{Corollaire}[section]
+\newtheorem{Prop}{Proposition}[section]
+\newtheorem{Def}{D\'{e}finition}[section]
+\newtheorem{Not}{Notation}[section]
+
+\newcommand{\Rmq}{\noindent\textbf{Remarque : }}
+\newcommand{\Csq}{\noindent\textbf{Cons\'{e}quence : }}
+\newcommand{\Rpl}{\noindent\textbf{Rappel : }}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\ssi}{si et seulement si }
+
+% Pour la proba :
+%\renewcommand{\P}{\mathscr{P}}
+%\newcommand{\courbe}[1]{\mathscr{#1}}
+
+% Pour les espaces de matrices
+\newcommand{\Mn}[1]{\mathscr{M}_n(\mathbb{#1})}
+
+% Pour la classe d'une fonction :
+\newcommand{\C}[1]{\mathcal{C}^{#1}}
+
+% pour faciliter l'\'{e}criture des fonctions
+\newcommand{\fonc}[5]{\begin{array}{r r c l}
+#1 : & #2 &\rightarrow & #3\\
+& #4 & \mapsto & #5
+\end{array}}
+
+% d droit des d\'{e}riv\'{e}es
+\newcommand{\dd}{\mathrm{d}}
+
+% pour faciliter l'\'{e}criture de la somme en dehors des \[\]
+\newcommand{\somme}[2]{\underset{#1}{\overset{#2}{\sum}}}
+
+\newcommand\independent{\protect\mathpalette{\protect\independenT}{\perp}}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+% variables ind\'{e}pendantes
+
+\author{Laura \bsc{Greige} \and Thibault \bsc{Gigant}}
+\date{\today}
+\title{Cahier des Charges\\P-ANDROIDE}
+
+
+
+\begin{document}
+
+%
+%\begin{figure}
+%\includegraphics[width=5cm]{upmc-logotype.png}
+%\end{figure}
+%
+%\begin{figure}
+%\includegraphics[width=5cm]{LogoBrown.png}
+%\end{figure}
+
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.7mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\center % Center everything on the page
+ 
+%----------------------------------------------------------------------------------------
+%	HEADING SECTIONS
+%----------------------------------------------------------------------------------------
+%\begin{flushleft}
+%\begin{minipage}{0.4\textwidth}
+%%\begin{flushleft}
+%\begin{center}
+%\includegraphics[width=5cm]{upmc-logotype.png}
+%
+%\medskip
+%\textsc{\large Universit\'{e}\\ Pierre-et-Marie-Curie}%\\[1.5cm] % Name of your university/college
+%\end{center}
+%%\end{flushleft}
+%\end{minipage}
+%\end{flushleft}
+%\hfill
+
+
+%\textsc{\Large Major Heading}\\[0.5cm] % Major heading such as course name
+%\textsc{\large Minor Heading}\\[0.5cm] % Minor heading such as course title
+
+%\bigskip
+\hspace{3cm}
+\vspace{2cm}
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\HRule \\[0.4cm]
+{ \huge \bfseries Cahier des Charges\\[0.4cm]P-ANDROIDE}\\[0.4cm] % Title of your document
+\HRule \\[2.5cm]
+ 
+%----------------------------------------------------------------------------------------
+%	AUTHOR SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Auteurs :}\\
+Laura \textsc{Greige}\\ % Your name
+Thibault \textsc{Gigant}\\ % Your name
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{Encadrants :} \\
+Olivier \textsc{Spanjaard}\\ % Supervisor's Name
+\end{flushright}
+\end{minipage}\\[2cm]
+
+
+%----------------------------------------------------------------------------------------
+%	DATE SECTION
+%----------------------------------------------------------------------------------------
+\vspace{3cm}
+{\large 2015 -- 2016}\\[2cm] % Date, change the \today to a set date if you want to be precise
+
+%----------------------------------------------------------------------------------------
+%	LOGO SECTION
+%----------------------------------------------------------------------------------------
+
+\vfill
+\begin{center}
+\includegraphics[width=5cm]{upmc-logotype.png}
+
+\medskip
+\textsc{\large Universit\'{e}\\ Pierre-et-Marie-Curie}%\\[1.5cm] % Name of your university/college
+\end{center}
+ 
+%----------------------------------------------------------------------------------------
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+
+\section*{Introduction}
+
+\section{Les deux approches : Branch \& Bound et S\'{e}riation}
+
+
+\subsection{Branch \& Bound}
+
+\subsection{S\'{e}riation}
+
+\section{R\'{e}alisation}
+
+
+\end{document}
