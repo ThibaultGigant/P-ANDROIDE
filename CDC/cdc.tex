@@ -7,7 +7,7 @@
 \usepackage{graphicx}
 \usepackage{url}
 \usepackage{hyperref}
-\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage[a4paper, top=2.8cm, bottom=2.8cm, left=2cm, right=2cm]{geometry}
 
 \usepackage{amsthm}
 \usepackage{amsmath}
@@ -132,7 +132,7 @@ Thibault \textsc{Gigant}\\ % Your name
 ~
 \begin{minipage}{0.4\textwidth}
 \begin{flushright} \large
-\emph{Encadrants :} \\
+\emph{Encadrant :} \\
 Olivier \textsc{Spanjaard}\\ % Supervisor's Name
 \end{flushright}
 \end{minipage}\\[2cm]
@@ -163,22 +163,22 @@ Olivier \textsc{Spanjaard}\\ % Supervisor's Name
 \end{titlepage}
 
 \section*{Introduction}
-Habituellement, lors d'un vote, l'électeur est amené à choisir un unique candidat parmi une multitude. Ainsi, il est très facile de compartimenter les votants à partir de leur vote, connaissant les affiliations de chaque candidat. En revanche, lorsqu'il est donné la possibilité aux électeurs de ne plus voter pour un seul candidat, mais pour un sous-ensemble d'entre eux qu'il approuverait, la tache se complique. Avec cette procédure de vote, qu'on dit par approbation, il peut être intéressant de voir le problème sous un autre angle. On peut étudier les différents votes formulés et tenter d'en extraire un axe \og gauche-droite \fg{} classant les candidats les uns par rapport aux autres en fonction de leur proximité.
+Habituellement, lors d'un vote, l'\'{e}lecteur est amen\'{e} \`{a} choisir un unique candidat parmi une multitude. Ainsi, il est tr\`{e}s facile de compartimenter les votants \`{a} partir de leur vote, connaissant les affiliations de chaque candidat. En revanche, lorsqu'il est donn\'{e} la possibilit\'{e} aux \'{e}lecteurs de ne plus voter pour un seul candidat, mais pour un sous-ensemble d'entre eux qu'il approuverait, la tache se complique. Avec cette proc\'{e}dure de vote, qu'on dit par approbation, il peut \^{e}tre int\'{e}ressant de voir le probl\`{e}me sous un autre angle. On peut \'{e}tudier les diff\'{e}rents votes formul\'{e}s et tenter d'en extraire un axe \og gauche-droite \fg{} classant les candidats les uns par rapport aux autres en fonction de leur proximit\'{e}.
 
-Il existe des algorithmes pour résoudre ce problème, et dans ce projet deux principales méthodes seront utilisées :
+Il existe des algorithmes pour r\'{e}soudre ce probl\`{e}me, et dans ce projet deux principales m\'{e}thodes seront utilis\'{e}es :
 \begin{itemize}
-	\item Réaliser un \og Branch \& Bound \fg{} sur l'ensemble des bulletins de vote pour identifier un sous-ensemble le plus large possible de bulletins cohérents avec un axe.
-	\item Utiliser un algorithme de sériation permettant de calculer l'axe qui crée le moins d'incohérences possibles dans une matrice de similarité entre les candidats, créée grâce aux bulletins de vote.
+	\item R\'{e}aliser un \og Branch \& Bound \fg{} sur l'ensemble des bulletins de vote pour identifier un sous-ensemble le plus large possible de bulletins coh\'{e}rents avec un axe.
+	\item Utiliser un algorithme de s\'{e}riation permettant de calculer l'axe qui cr\'{e}e le moins d'incoh\'{e}rences possibles dans une matrice de similarit\'{e} entre les candidats, cr\'{e}\'{e}e gr\^{a}ce aux bulletins de vote.
 \end{itemize}
 
-Ces deux approches seront plus amplement détaillées dans la première partie de ce cahier des charges. Quant à la seconde partie, elle sera dédiée à la réalisation qui sera faite de ce problème.
+Ces deux approches seront plus amplement d\'{e}taill\'{e}es dans la partie suivante de ce cahier des charges.
 
-\section{Les deux approches : Branch \& Bound et S\'{e}riation}
+\section*{Les deux approches : Branch \& Bound et S\'{e}riation}
 
 
-\subsection{Branch \& Bound}
+\subsection*{Branch \& Bound}
 
-Pour trouver la solution optimale du probl\`{e}me, il faut utiliser une m\'{e}thode exacte, comme le \og Branch \& Bound \fg{} qui sera repr\'{e}sent\'{e} par un arbre de recherche binaire. Chaque sous-probl\`{e}me cr\'{e}\'{e} au cours de l'exploration est d\'{e}sign\'{e} par un n\oe{}ud qui repr\'{e}sente les bulletins contenu dans le sous-ensemble. Les branches de l'arbre symbolisent le processus de s\'{e}paration, elles repr\'{e}sentent la relation entre les n\oe{}uds (ajouter le bulletin $i$ dans le sous-ensemble ou non). Cette m\'{e}thode arborescente nous permettrait donc d'\'{e}num\'{e}rer toutes les solutions possibles.
+Pour trouver la solution optimale du probl\`{e}me, il faut utiliser une m\'{e}thode exacte, comme le \og Branch \& Bound \fg{} qui sera repr\'{e}sent\'{e} par un arbre de recherche binaire. Chaque sous-probl\`{e}me cr\'{e}\'{e} au cours de l'exploration est d\'{e}sign\'{e} par un n\oe{}ud qui repr\'{e}sente les bulletins contenus dans le sous-ensemble. Les branches de l'arbre symbolisent le processus de s\'{e}paration, elles repr\'{e}sentent la relation entre les n\oe{}uds (ajouter le bulletin $i$ dans le sous-ensemble ou non). Cette m\'{e}thode arborescente nous permettra donc d'\'{e}num\'{e}rer toutes les solutions possibles.
 
 L'algorithme d'\'{e}num\'{e}ration compl\`{e}te des solutions peut \^{e}tre illustr\'{e} par une arborescence de hauteur $n$, o\`{u} \`{a} chaque n\oe{}ud on consid\`{e}re les 2 valeurs possibles pour un bulletin. En chacune des 2$n$ feuilles, on a une solution possible qui correspond ou non \`{a} une solution admissible dont on peut trouver l'axe correspondant (si ce dernier existe) et on retient la meilleure solution obtenue, qui dans ce cas, sera l'ensemble le plus large de bulletins coh\'{e}rent avec un axe.
 
@@ -195,20 +195,26 @@ suivantes est v\'{e}rifi\'{e}e : \\
 -- on conna\^{i}t une solution meilleure que toutes celles de l'ensemble ; \\
 
 \item \textbf{Principe d'\'{e}valuation} ~  Le principe d'\'{e}valuation a pour objectif de conna\^{i}tre la qualit\'{e} des n\oe{}uds \`{a} traiter. La m\'{e}thode de \og Branch and Bound \fg{} utilise deux types de bornes : une borne inf\'{e}rieure de la fonction d'utilit\'{e} du probl\`{e}me initial et une borne sup\'{e}rieure de la fonction d'utilit\'{e}. La connaissance d'une borne inf\'{e}rieure du probl\`{e}me et d'une borne sup\'{e}rieure de la fonction d'utilit\'{e} de chaque sous-probl\`{e}me permet d'arr\^{e}ter  l'exploration d'un sous-ensemble de
-solutions qui ne sont pas candidates \`{a} l'optimalit\'{e}. \\
+solutions qui ne sont pas candidats \`{a} l'optimalit\'{e}. \\
 
 \item \textbf{Parcours de l'arbre} ~ Le type de parcours de l'arbre permet de choisir le prochain n\oe{}ud \`{a} s\'{e}parer parmi l'ensemble des n\oe{}uds de l'arborescence. L'exploration en profondeur privil\'{e}gie les sous-probl\`{e}mes obtenus par le plus grand nombre de s\'{e}parations appliqu\'{e}es au probl\`{e}me de d\'{e}part, c'est-\`{a}-dire aux sommets les plus \'{e}loign\'{e}s de la racine (= de profondeur la plus \'{e}lev\'{e}e). L'obtention rapide d'une solution admissible en est l'avantage.
 
 \end{itemize}
 
-\subsection{S\'{e}riation}
+\subsection*{S\'{e}riation}
+La deuxième méthode qui sera utilisée appliquera un algorithme de sériation. Le principe est de calculer une matrice dont chaque élément représente la dissimilarité entre les candidats. Celle-ci peut être calculée de plusieurs manières, et chacune sera étudiée et comparée aux autres, pour déterminer laquelle correspond le plus à la recherche de l'axe voulu. Cette valeur est un réel compris entre 0 et 1, tel que 0 représente une similarité parfaite, et 1 une dissimilarité totale. Ainsi, l'élément en position $ij$ de la matrice donnera la dissimilarité entre le candidat $i$ et le candidat $j$. Bien entendu, cette matrice est parfaitement symétrique et a pour diagonale principale des 0. Elle peut donc être considérée comme une matrice strictement triangulaire supérieur, puisque la diagonale ne changera pas et la partie inférieure n'est que le miroir de la partie supérieure.
 
-\section{R\'{e}alisation}
+A partir de cette matrice, pour trouver un axe parmi les candidats, il suffit alors de trouver une permutation des lignes et des colonnes (donc des candidats) qui rajoute une caractéristique à cette matrice. En effet, cette permutation doit rendre les éléments sur les lignes et les colonnes croissants au fur et à mesure que l'on s'éloigne de la diagonale. Pour ceci, deux solutions s'imposent :\\
+\begin{itemize}
+	\item  \textbf{La force brute} ~  qui prend toutes les permutations possibles de l'axe des candidats, calcule un score à partir de la matrice de dissimilarité de chaque permutation, et renvoie celle donnant le score minimal. Cette méthode naïve sera implémentée, mais étant donnée sa complexité exponentielle, puisqu'elle demande de calculer le score des $n!$ ($n$ étant le nombre de candidats) axes possibles, elle ne sera utilisée que pour vérifier la validité de la solution suivante, avec un nombre de candidats restreint.\\
+	\item \textbf{La programmation dynamique} ~ Algorithme inspiré des travaux de \textsc{Hubert}. Il permet, un peu comme avec l'algorithme de \og Branch \& Bound \fg{} vu précédemment, de n'explorer que les sous-ensembles des permutations qui semblent les plus prometteuses.
+\end{itemize}
 
-\subsection{Implémentation des algorithmes}
+\section*{Conclusion}
 
-Nous avons choisi d'impl\'{e}menter les algorithmes en Python, en utilisant la libraire Sage qui reprend et \'{e}tend les fonctionnalit\'{e}s de nombreux packages sous-jacentes.
+Pour impl\'{e}menter ces différents algorithmes, le langage \emph{Python} a été choisi, en utilisant la libraire \emph{Sage} qui reprend et \'{e}tend les fonctionnalit\'{e}s de nombreux packages préexistants. En effet, ce langage possède quantité d'outils permettant de coder rapidement et facilement les algorithmes souhaités. De plus, pour produire une interface graphique, \emph{Python} possède une bibliothèque nommée \emph{Tkinter}, permettant de réaliser des interfaces simples, mais dont la portabilité sur les OS les plus courants est assurée. Cette interface permettra à l'utilisateur de choisir parmi les différentes méthodes qui seront implémentées, ainsi que le fichier où sont retranscrits les différents bulletins récoltés à une élection.
 
-\subsection{Interface Utilisateur}
+Enfin, les outils développés dans ce projet seront testés sur une base de données nommée \emph{PrefLib} disponible sur \url{http://www.preflib.org/}. Le travail ainsi effectué n'est donc pas uniquement théorique, il a aussi des applications réelles.
+
 
 \end{document}
