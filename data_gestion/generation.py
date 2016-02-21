@@ -40,7 +40,7 @@ def generation(nb_candidates, nb_ballots, nb_prefs=None):
     # Creation of a list of candidates, shuffled to simulate some sort of classification
     cand_list = list(range(1, nb_candidates+1))
     shuffle(cand_list)
-    #print("The randomly generated candidates order is: ", cand_list)
+    print("The randomly generated candidates order is: ", cand_list)
 
     # Creation of ballots
     ballots = []

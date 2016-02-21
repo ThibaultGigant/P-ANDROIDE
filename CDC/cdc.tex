@@ -163,7 +163,7 @@ Olivier \textsc{Spanjaard}\\ % Supervisor's Name
 \end{titlepage}
 
 \section*{Introduction}
-Habituellement, lors d'un vote , l'électeur est amené à choisir un unique candidat parmi une multitude. Ainsi, il est très facile de compartimenter les votants à partir de leur vote, connaissant les affiliations de chaque candidat. En revanche, lorsqu'il est donné la possibilité aux électeurs de ne plus voter pour un seul candidat, mais pour un sous-ensemble d'entre eux qu'il approuverait, la tache se complique. Avec cette procédure de vote, qu'on dit par approbation, il peut être intéressant de voir le problème sous un autre angle. On peut étudier les différents votes formulés et tenter d'en extraire un axe \og gauche-droite \fg{} classant les candidats les uns par rapport aux autres en fonction de leur proximité.
+Habituellement, lors d'un vote, l'électeur est amené à choisir un unique candidat parmi une multitude. Ainsi, il est très facile de compartimenter les votants à partir de leur vote, connaissant les affiliations de chaque candidat. En revanche, lorsqu'il est donné la possibilité aux électeurs de ne plus voter pour un seul candidat, mais pour un sous-ensemble d'entre eux qu'il approuverait, la tache se complique. Avec cette procédure de vote, qu'on dit par approbation, il peut être intéressant de voir le problème sous un autre angle. On peut étudier les différents votes formulés et tenter d'en extraire un axe \og gauche-droite \fg{} classant les candidats les uns par rapport aux autres en fonction de leur proximité.
 
 Il existe des algorithmes pour résoudre ce problème, et dans ce projet deux principales méthodes seront utilisées :
 \begin{itemize}
@@ -178,11 +178,36 @@ Ces deux approches seront plus amplement détaillées dans la première partie d
 
 \subsection{Branch \& Bound}
 
+Pour trouver la solution optimale du probl\`{e}me, il faut utiliser une m\'{e}thode exacte, comme le \og Branch \& Bound \fg{} qui sera repr\'{e}sent\'{e} par un arbre de recherche binaire. Chaque sous-probl\`{e}me cr\'{e}\'{e} au cours de l'exploration est d\'{e}sign\'{e} par un n\oe{}ud qui repr\'{e}sente les bulletins contenu dans le sous-ensemble. Les branches de l'arbre symbolisent le processus de s\'{e}paration, elles repr\'{e}sentent la relation entre les n\oe{}uds (ajouter le bulletin $i$ dans le sous-ensemble ou non). Cette m\'{e}thode arborescente nous permettrait donc d'\'{e}num\'{e}rer toutes les solutions possibles.
+
+L'algorithme d'\'{e}num\'{e}ration compl\`{e}te des solutions peut \^{e}tre illustr\'{e} par une arborescence de hauteur $n$, o\`{u} \`{a} chaque n\oe{}ud on consid\`{e}re les 2 valeurs possibles pour un bulletin. En chacune des 2$n$ feuilles, on a une solution possible qui correspond ou non \`{a} une solution admissible dont on peut trouver l'axe correspondant (si ce dernier existe) et on retient la meilleure solution obtenue, qui dans ce cas, sera l'ensemble le plus large de bulletins coh\'{e}rent avec un axe.
+
+Pour am\'{e}liorer la complexit\'{e} du \og Branch \& Bound \fg, seules les solutions potentiellement de bonne qualit\'{e} seront \'{e}num\'{e}r\'{e}es, les solutions ne pouvant pas conduire \`{a} am\'{e}liorer la solution courante ne sont pas explor\'{e}es. \\
+
+Le \og Branch \& Bound \fg{} est bas\'{e} sur trois principes : \\
+
+\begin{itemize}
+
+\item \textbf{Principe de s\'{e}paration} ~ Le principe de s\'{e}paration consiste \`{a} diviser le probl\`{e}me en un certain nombre de sous-probl\`{e}mes qui ont chacun leur ensemble de solutions r\'{e}alisables. En r\'{e}solvant tous les sous-probl\`{e}mes et en prenant la meilleure solution trouv\'{e}e, on est assur\'{e} d'avoir r\'{e}solu le probl\`{e}me initial. Ce principe de s\'{e}paration est appliqu\'{e} de mani\`{e}re r\'{e}cursive \`{a} chacun des sous-ensembles tant que celui-ci contient plusieurs solutions. \\
+Remarque : La proc\'{e}dure de s\'{e}paration d'un ensemble s'arr\^{e}te lorsqu'une des conditions
+suivantes est v\'{e}rifi\'{e}e : \\
+-- on sait que l'ensemble ne contient aucune solution admissible (cas o\`{u} l'un des bulletins n'est pas coh\'{e}rent avec les axes trouv\'{e}s) ; \\
+-- on conna\^{i}t une solution meilleure que toutes celles de l'ensemble ; \\
+
+\item \textbf{Principe d'\'{e}valuation} ~  Le principe d'\'{e}valuation a pour objectif de conna\^{i}tre la qualit\'{e} des n\oe{}uds \`{a} traiter. La m\'{e}thode de \og Branch and Bound \fg{} utilise deux types de bornes : une borne inf\'{e}rieure de la fonction d'utilit\'{e} du probl\`{e}me initial et une borne sup\'{e}rieure de la fonction d'utilit\'{e}. La connaissance d'une borne inf\'{e}rieure du probl\`{e}me et d'une borne sup\'{e}rieure de la fonction d'utilit\'{e} de chaque sous-probl\`{e}me permet d'arr\^{e}ter  l'exploration d'un sous-ensemble de
+solutions qui ne sont pas candidates \`{a} l'optimalit\'{e}. \\
+
+\item \textbf{Parcours de l'arbre} ~ Le type de parcours de l'arbre permet de choisir le prochain n\oe{}ud \`{a} s\'{e}parer parmi l'ensemble des n\oe{}uds de l'arborescence. L'exploration en profondeur privil\'{e}gie les sous-probl\`{e}mes obtenus par le plus grand nombre de s\'{e}parations appliqu\'{e}es au probl\`{e}me de d\'{e}part, c'est-\`{a}-dire aux sommets les plus \'{e}loign\'{e}s de la racine (= de profondeur la plus \'{e}lev\'{e}e). L'obtention rapide d'une solution admissible en est l'avantage.
+
+\end{itemize}
+
 \subsection{S\'{e}riation}
 
 \section{R\'{e}alisation}
 
 \subsection{Implémentation des algorithmes}
+
+Nous avons choisi d'impl\'{e}menter les algorithmes en Python, en utilisant la libraire Sage qui reprend et \'{e}tend les fonctionnalit\'{e}s de nombreux packages sous-jacentes.
 
 \subsection{Interface Utilisateur}
 
