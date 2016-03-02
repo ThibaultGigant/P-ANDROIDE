@@ -57,8 +57,10 @@ def read_file(filename):
             i = 0
             while i < len(pref):
                 p = pref[i]
-                if p[0] != '{':
-                    temp[1].append(int(p))
+                if p[0] != '{' or i == 0:
+                    p = p.strip('{}')
+                    if len(p) > 0:
+                        temp[1].append(int(p))
                 else:
                     indiff = []
                     p = p[1:]

@@ -4,9 +4,7 @@
 from sage.all import Set, matrix
 from itertools import permutations, combinations
 from generation import generation
-from file_gestion import read_file
 from time import time
-import sys
 
 
 def dissimilarity_and_n(structure, candidate1, candidate2):
