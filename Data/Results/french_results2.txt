@@ -1,0 +1,50 @@
+../Data/frenchapproval/ED-00026-00000001.toc
+calculation time: 77.6942331791 seconds
+axes: (87, [[1, 5, 4, 10, 3, 2, 9, 7, 6, 12, 11, 8], [1, 5, 4, 10, 3, 2, 9, 6, 12, 7, 11, 8], [1, 5, 4, 10, 3, 2, 9, 12, 6, 7, 11, 8], [1, 5, 4, 10, 3, 2, 9, 12, 11, 6, 7, 8], [8, 11, 12, 6, 7, 9, 2, 3, 10, 4, 5, 1], [8, 11, 7, 12, 6, 9, 2, 3, 10, 4, 5, 1], [8, 11, 7, 6, 12, 9, 2, 3, 10, 4, 5, 1], [8, 7, 6, 11, 12, 9, 2, 3, 10, 4, 5, 1]])
+['Megret', 'Saint-Josse', 'LePen', 'Madelin', 'Chirac', 'Bayrou', 'Chevenement', 'Jospin', 'Mamere', 'Besancenot', 'Laguiller', 'Hue']
+['Megret', 'Saint-Josse', 'LePen', 'Madelin', 'Chirac', 'Bayrou', 'Chevenement', 'Mamere', 'Besancenot', 'Jospin', 'Laguiller', 'Hue']
+['Megret', 'Saint-Josse', 'LePen', 'Madelin', 'Chirac', 'Bayrou', 'Chevenement', 'Besancenot', 'Mamere', 'Jospin', 'Laguiller', 'Hue']
+['Megret', 'Saint-Josse', 'LePen', 'Madelin', 'Chirac', 'Bayrou', 'Chevenement', 'Besancenot', 'Laguiller', 'Mamere', 'Jospin', 'Hue']
+['Hue', 'Laguiller', 'Besancenot', 'Mamere', 'Jospin', 'Chevenement', 'Bayrou', 'Chirac', 'Madelin', 'LePen', 'Saint-Josse', 'Megret']
+['Hue', 'Laguiller', 'Jospin', 'Besancenot', 'Mamere', 'Chevenement', 'Bayrou', 'Chirac', 'Madelin', 'LePen', 'Saint-Josse', 'Megret']
+['Hue', 'Laguiller', 'Jospin', 'Mamere', 'Besancenot', 'Chevenement', 'Bayrou', 'Chirac', 'Madelin', 'LePen', 'Saint-Josse', 'Megret']
+['Hue', 'Jospin', 'Mamere', 'Laguiller', 'Besancenot', 'Chevenement', 'Bayrou', 'Chirac', 'Madelin', 'LePen', 'Saint-Josse', 'Megret']
+
+../Data/frenchapproval/ED-00026-00000002.toc
+calculation time: 68.0956778526 seconds
+axes: (38, [[1, 4, 10, 5, 3, 2, 9, 7, 6, 8, 11, 12], [1, 4, 5, 10, 3, 2, 9, 7, 6, 8, 11, 12], [12, 11, 8, 6, 7, 9, 2, 3, 5, 10, 4, 1], [12, 11, 8, 6, 7, 9, 2, 3, 10, 5, 4, 1]])
+['Megret', 'LePen', 'Madelin', 'Saint-Josse', 'Chirac', 'Bayrou', 'Chevenement', 'Jospin', 'Mamere', 'Hue', 'Laguiller', 'Besancenot']
+['Megret', 'LePen', 'Saint-Josse', 'Madelin', 'Chirac', 'Bayrou', 'Chevenement', 'Jospin', 'Mamere', 'Hue', 'Laguiller', 'Besancenot']
+['Besancenot', 'Laguiller', 'Hue', 'Mamere', 'Jospin', 'Chevenement', 'Bayrou', 'Chirac', 'Saint-Josse', 'Madelin', 'LePen', 'Megret']
+['Besancenot', 'Laguiller', 'Hue', 'Mamere', 'Jospin', 'Chevenement', 'Bayrou', 'Chirac', 'Madelin', 'Saint-Josse', 'LePen', 'Megret']
+
+../Data/frenchapproval/ED-00026-00000003.toc
+calculation time: 68.0134401321 seconds
+axes: (56, [[1, 5, 4, 10, 3, 2, 9, 7, 6, 12, 11, 8], [8, 11, 12, 6, 7, 9, 2, 3, 10, 4, 5, 1]])
+['Megret', 'Saint-Josse', 'LePen', 'Madelin', 'Chirac', 'Bayrou', 'Chevenement', 'Jospin', 'Mamere', 'Besancenot', 'Laguiller', 'Hue']
+['Hue', 'Laguiller', 'Besancenot', 'Mamere', 'Jospin', 'Chevenement', 'Bayrou', 'Chirac', 'Madelin', 'LePen', 'Saint-Josse', 'Megret']
+
+../Data/frenchapproval/ED-00026-00000004.toc
+calculation time: 70.2607309818 seconds
+axes: (52, [[1, 4, 5, 10, 3, 2, 9, 7, 6, 11, 12, 8], [1, 4, 5, 3, 10, 2, 9, 7, 6, 11, 12, 8], [8, 12, 11, 6, 7, 9, 2, 3, 10, 5, 4, 1], [8, 12, 11, 6, 7, 9, 2, 10, 3, 5, 4, 1]])
+['Megret', 'LePen', 'Saint-Josse', 'Madelin', 'Chirac', 'Bayrou', 'Chevenement', 'Jospin', 'Mamere', 'Laguiller', 'Besancenot', 'Hue']
+['Megret', 'LePen', 'Saint-Josse', 'Chirac', 'Madelin', 'Bayrou', 'Chevenement', 'Jospin', 'Mamere', 'Laguiller', 'Besancenot', 'Hue']
+['Hue', 'Besancenot', 'Laguiller', 'Mamere', 'Jospin', 'Chevenement', 'Bayrou', 'Chirac', 'Madelin', 'Saint-Josse', 'LePen', 'Megret']
+['Hue', 'Besancenot', 'Laguiller', 'Mamere', 'Jospin', 'Chevenement', 'Bayrou', 'Madelin', 'Chirac', 'Saint-Josse', 'LePen', 'Megret']
+
+../Data/frenchapproval/ED-00026-00000005.toc
+calculation time: 75.2141880989 seconds
+axes: (49, [[1, 4, 5, 3, 10, 9, 2, 6, 7, 11, 12, 8], [1, 4, 5, 3, 10, 9, 2, 7, 6, 11, 12, 8], [8, 12, 11, 6, 7, 2, 9, 10, 3, 5, 4, 1], [8, 12, 11, 7, 6, 2, 9, 10, 3, 5, 4, 1]])
+['Megret', 'LePen', 'Saint-Josse', 'Chirac', 'Madelin', 'Chevenement', 'Bayrou', 'Mamere', 'Jospin', 'Laguiller', 'Besancenot', 'Hue']
+['Megret', 'LePen', 'Saint-Josse', 'Chirac', 'Madelin', 'Chevenement', 'Bayrou', 'Jospin', 'Mamere', 'Laguiller', 'Besancenot', 'Hue']
+['Hue', 'Besancenot', 'Laguiller', 'Mamere', 'Jospin', 'Bayrou', 'Chevenement', 'Madelin', 'Chirac', 'Saint-Josse', 'LePen', 'Megret']
+['Hue', 'Besancenot', 'Laguiller', 'Jospin', 'Mamere', 'Bayrou', 'Chevenement', 'Madelin', 'Chirac', 'Saint-Josse', 'LePen', 'Megret']
+
+../Data/frenchapproval/ED-00026-00000006.toc
+calculation time: 85.2873818874 seconds
+axes: (66, [[1, 4, 10, 2, 3, 9, 7, 6, 11, 12, 8, 5], [1, 4, 10, 3, 2, 9, 7, 6, 11, 12, 8, 5], [5, 8, 12, 11, 6, 7, 9, 2, 3, 10, 4, 1], [5, 8, 12, 11, 6, 7, 9, 3, 2, 10, 4, 1]])
+['Megret', 'LePen', 'Madelin', 'Bayrou', 'Chirac', 'Chevenement', 'Jospin', 'Mamere', 'Laguiller', 'Besancenot', 'Hue', 'Saint-Josse']
+['Megret', 'LePen', 'Madelin', 'Chirac', 'Bayrou', 'Chevenement', 'Jospin', 'Mamere', 'Laguiller', 'Besancenot', 'Hue', 'Saint-Josse']
+['Saint-Josse', 'Hue', 'Besancenot', 'Laguiller', 'Mamere', 'Jospin', 'Chevenement', 'Bayrou', 'Chirac', 'Madelin', 'LePen', 'Megret']
+['Saint-Josse', 'Hue', 'Besancenot', 'Laguiller', 'Mamere', 'Jospin', 'Chevenement', 'Chirac', 'Bayrou', 'Madelin', 'LePen', 'Megret']
+
