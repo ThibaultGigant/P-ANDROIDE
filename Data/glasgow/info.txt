@@ -1,0 +1,122 @@
+Name: Glasgow City Council
+
+Abbreviation: glasgow
+
+Extension: ED
+
+Series Number: 00008
+
+Path: election/glasgow
+
+Description: <p>This data set contains the results of the 2007 Glasgow City Council elections, seperated by Ward.  There are 21 wards, each with different candidates and voters.  These files report the results of all the Ward level elections which were origionally held under STV.  In this data set there is a maximum of 13 candidates and a minimum of 8 candidates.  The maximum number of voters is 12,744 and the minimum is 5,199.</p>  <p> The data presented here was donated by Jeffrey O'Neill who runs the site <a href="http://www.openstv.org">OpenSTV.org</a>.</p>
+
+Required Citations: Open STV; Jeffery O'Neill; <a href="http://www.openstv.org">www.OpenSTV.org</a>; 2013
+
+Selected Studies: None
+
+description,status,file_name
+2007 Scotland Anderston Ward,Imbued,ED-00008-00000001.toc
+2007 Scotland Anderston Ward,Induced,ED-00008-00000001.pwg
+2007 Scotland Anderston Ward,Original,ED-00008-00000001.soi
+2007 Scotland Anderston Ward,Induced,ED-00008-00000001.tog
+2007 Scotland Anderston Ward,Induced,ED-00008-00000001.wmg
+2007 Scotland Baillieston Ward,Imbued,ED-00008-00000002.toc
+2007 Scotland Baillieston Ward,Induced,ED-00008-00000002.pwg
+2007 Scotland Baillieston Ward,Original,ED-00008-00000002.soi
+2007 Scotland Baillieston Ward,Induced,ED-00008-00000002.tog
+2007 Scotland Baillieston Ward,Induced,ED-00008-00000002.wmg
+2007 Scotland Calton Ward,Imbued,ED-00008-00000003.toc
+2007 Scotland Calton Ward,Induced,ED-00008-00000003.pwg
+2007 Scotland Calton Ward,Original,ED-00008-00000003.soi
+2007 Scotland Calton Ward,Induced,ED-00008-00000003.tog
+2007 Scotland Calton Ward,Induced,ED-00008-00000003.wmg
+2007 Scotland Canal Ward,Imbued,ED-00008-00000004.toc
+2007 Scotland Canal Ward,Induced,ED-00008-00000004.pwg
+2007 Scotland Canal Ward,Original,ED-00008-00000004.soi
+2007 Scotland Canal Ward,Induced,ED-00008-00000004.tog
+2007 Scotland Canal Ward,Induced,ED-00008-00000004.wmg
+2007 Scotland Craigton Ward,Imbued,ED-00008-00000005.toc
+2007 Scotland Craigton Ward,Induced,ED-00008-00000005.pwg
+2007 Scotland Craigton Ward,Original,ED-00008-00000005.soi
+2007 Scotland Craigton Ward,Induced,ED-00008-00000005.tog
+2007 Scotland Craigton Ward,Induced,ED-00008-00000005.wmg
+2007 Scotland Drumchapel Ward,Imbued,ED-00008-00000006.toc
+2007 Scotland Drumchapel Ward,Induced,ED-00008-00000006.pwg
+2007 Scotland Drumchapel Ward,Original,ED-00008-00000006.soi
+2007 Scotland Drumchapel Ward,Induced,ED-00008-00000006.tog
+2007 Scotland Drumchapel Ward,Induced,ED-00008-00000006.wmg
+2007 Scotland EastCentre Ward,Imbued,ED-00008-00000007.toc
+2007 Scotland EastCentre Ward,Induced,ED-00008-00000007.pwg
+2007 Scotland EastCentre Ward,Original,ED-00008-00000007.soi
+2007 Scotland EastCentre Ward,Induced,ED-00008-00000007.tog
+2007 Scotland EastCentre Ward,Induced,ED-00008-00000007.wmg
+2007 Scotland Garscadden Ward,Imbued,ED-00008-00000008.toc
+2007 Scotland Garscadden Ward,Induced,ED-00008-00000008.pwg
+2007 Scotland Garscadden Ward,Original,ED-00008-00000008.soi
+2007 Scotland Garscadden Ward,Induced,ED-00008-00000008.tog
+2007 Scotland Garscadden Ward,Induced,ED-00008-00000008.wmg
+2007 Scotland Govan Ward,Imbued,ED-00008-00000009.toc
+2007 Scotland Govan Ward,Induced,ED-00008-00000009.pwg
+2007 Scotland Govan Ward,Original,ED-00008-00000009.soi
+2007 Scotland Govan Ward,Induced,ED-00008-00000009.tog
+2007 Scotland Govan Ward,Induced,ED-00008-00000009.wmg
+2007 Scotland GreaterPollok Ward,Imbued,ED-00008-00000010.toc
+2007 Scotland GreaterPollok Ward,Induced,ED-00008-00000010.pwg
+2007 Scotland GreaterPollok Ward,Original,ED-00008-00000010.soi
+2007 Scotland GreaterPollok Ward,Induced,ED-00008-00000010.tog
+2007 Scotland GreaterPollok Ward,Induced,ED-00008-00000010.wmg
+2007 Scotland Hillhead Ward,Imbued,ED-00008-00000011.toc
+2007 Scotland Hillhead Ward,Induced,ED-00008-00000011.pwg
+2007 Scotland Hillhead Ward,Original,ED-00008-00000011.soi
+2007 Scotland Hillhead Ward,Induced,ED-00008-00000011.tog
+2007 Scotland Hillhead Ward,Induced,ED-00008-00000011.wmg
+2007 Scotland Langside Ward,Imbued,ED-00008-00000012.toc
+2007 Scotland Langside Ward,Induced,ED-00008-00000012.pwg
+2007 Scotland Langside Ward,Original,ED-00008-00000012.soi
+2007 Scotland Langside Ward,Induced,ED-00008-00000012.tog
+2007 Scotland Langside Ward,Induced,ED-00008-00000012.wmg
+2007 Scotland Linn Ward,Imbued,ED-00008-00000013.toc
+2007 Scotland Linn Ward,Induced,ED-00008-00000013.pwg
+2007 Scotland Linn Ward,Original,ED-00008-00000013.soi
+2007 Scotland Linn Ward,Induced,ED-00008-00000013.tog
+2007 Scotland Linn Ward,Induced,ED-00008-00000013.wmg
+2007 Scotland Maryhill Ward,Imbued,ED-00008-00000014.toc
+2007 Scotland Maryhill Ward,Induced,ED-00008-00000014.pwg
+2007 Scotland Maryhill Ward,Original,ED-00008-00000014.soi
+2007 Scotland Maryhill Ward,Induced,ED-00008-00000014.tog
+2007 Scotland Maryhill Ward,Induced,ED-00008-00000014.wmg
+2007 Scotland Newlands Ward,Imbued,ED-00008-00000015.toc
+2007 Scotland Newlands Ward,Induced,ED-00008-00000015.pwg
+2007 Scotland Newlands Ward,Original,ED-00008-00000015.soi
+2007 Scotland Newlands Ward,Induced,ED-00008-00000015.tog
+2007 Scotland Newlands Ward,Induced,ED-00008-00000015.wmg
+2007 Scotland NorthEast Ward,Imbued,ED-00008-00000016.toc
+2007 Scotland NorthEast Ward,Induced,ED-00008-00000016.pwg
+2007 Scotland NorthEast Ward,Original,ED-00008-00000016.soi
+2007 Scotland NorthEast Ward,Induced,ED-00008-00000016.tog
+2007 Scotland NorthEast Ward,Induced,ED-00008-00000016.wmg
+2007 Scotland Partick Ward,Imbued,ED-00008-00000017.toc
+2007 Scotland Partick Ward,Induced,ED-00008-00000017.pwg
+2007 Scotland Partick Ward,Original,ED-00008-00000017.soi
+2007 Scotland Partick Ward,Induced,ED-00008-00000017.tog
+2007 Scotland Partick Ward,Induced,ED-00008-00000017.wmg
+2007 Scotland Pollokshields Ward,Imbued,ED-00008-00000018.toc
+2007 Scotland Pollokshields Ward,Induced,ED-00008-00000018.pwg
+2007 Scotland Pollokshields Ward,Original,ED-00008-00000018.soi
+2007 Scotland Pollokshields Ward,Induced,ED-00008-00000018.tog
+2007 Scotland Pollokshields Ward,Induced,ED-00008-00000018.wmg
+2007 Scotland Shettleston Ward,Imbued,ED-00008-00000019.toc
+2007 Scotland Shettleston Ward,Induced,ED-00008-00000019.pwg
+2007 Scotland Shettleston Ward,Original,ED-00008-00000019.soi
+2007 Scotland Shettleston Ward,Induced,ED-00008-00000019.tog
+2007 Scotland Shettleston Ward,Induced,ED-00008-00000019.wmg
+2007 Scotland SouthsideCentral Ward,Imbued,ED-00008-00000020.toc
+2007 Scotland SouthsideCentral Ward,Induced,ED-00008-00000020.pwg
+2007 Scotland SouthsideCentral Ward,Original,ED-00008-00000020.soi
+2007 Scotland SouthsideCentral Ward,Induced,ED-00008-00000020.tog
+2007 Scotland SouthsideCentral Ward,Induced,ED-00008-00000020.wmg
+2007 Scotland Springburn Ward,Imbued,ED-00008-00000021.toc
+2007 Scotland Springburn Ward,Induced,ED-00008-00000021.pwg
+2007 Scotland Springburn Ward,Original,ED-00008-00000021.soi
+2007 Scotland Springburn Ward,Induced,ED-00008-00000021.tog
+2007 Scotland Springburn Ward,Induced,ED-00008-00000021.wmg

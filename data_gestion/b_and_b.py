@@ -18,34 +18,35 @@ def bandb(preferences, candidates, node, enum_list):
     """
     new_preferences = copy(preferences)
     while new_preferences:
-        (nb_voters,ballot) = new_preferences[0]
-        new_preferences.remove((nb_voters,ballot))
-        if node == []:
-            node = ([],0)
+        (nb_voters, ballot) = new_preferences[0]
+        new_preferences.remove((nb_voters, ballot))
+        if not node:
+            node = ([], 0)
         tmp_set, tmp_bound = copy(node)
-        new_node = (tmp_set+[ballot],tmp_bound)
+        new_node = (tmp_set + [ballot], tmp_bound)
 
         # Caluclate upper node
-        #new_bound = upper_bound(new_node,preferences_bis)
-        #new_node = (new_node[0],new_bound)
+        # new_bound = upper_bound(new_node,preferences_bis)
+        # new_node = (new_node[0],new_bound)
 
         enum_list += [new_node, copy(node)]
 
         # Find compatible axes
-        #nb_axes, axes = find_axes(new_node)
+        # nb_axes, axes = find_axes(new_node)
 
         # If no axis found
-        #if axes == False:
+        # if axes == False:
         #    continue
         # If only one axis was found, add the remaining ballots that are compatible with the axis
-        #if nb_axes == 1:
+        # if nb_axes == 1:
         #    add_coherent_ballots(node, new_preferences)
         # Else, branch
-        #else:
+        # else:
         #    bandb(new_preferences, new_node, enum_list)
 
         bandb(new_preferences, candidates, new_node, enum_list)
     return enum_list
+
 
 def find_axes(node, candidates):
     """
@@ -71,6 +72,7 @@ def find_axes(node, candidates):
 
     return reorder_sets(L)
 
+
 def transform_ballots(node):
     """
     Transforms ballot in node to a Set
@@ -85,6 +87,7 @@ def transform_ballots(node):
             L.append(Set(ballot[:-1]))
     return L
 
+
 def add_coherent_ballots(node, remaining_prefs):
     """
     Adds the remaining ballots that are coherent with the axis to node
@@ -93,9 +96,10 @@ def add_coherent_ballots(node, remaining_prefs):
     :return: List of ballots
     """
     for (nb_voters, ballot) in remaining_prefs:
-        axes = find_axes(node[0]+[ballot])
+        axes = find_axes(node[0] + [ballot])
         if axes:
             node[0] = node[0] + [ballot]
+
 
 def upper_bound(node, remaining_prefs):
     """
@@ -111,10 +115,11 @@ def upper_bound(node, remaining_prefs):
             new_bound = bound + nb_voters
     return new_bound
 
+
 if __name__ == '__main__':
-    #structure, candidates = generation(5, 3, 3)
-    #preferences = structure["preferences"]
-    #print(bandb(preferences, candidates, [], []))
+    # structure, candidates = generation(5, 3, 3)
+    # preferences = structure["preferences"]
+    # print(bandb(preferences, candidates, [], []))
 
     node = ([[6, 5, 9, {1, 2, 3, 4, 7, 8, 10}],
              [4, 7, 3, {1, 2, 5, 6, 8, 9, 10}],
@@ -124,6 +129,6 @@ if __name__ == '__main__':
              [7, 2, 1, {3, 4, 5, 6, 8, 9, 10}],
              [2, 7, 1, {3, 4, 5, 6, 8, 9, 10}],
              [2, 1, 7, {3, 4, 5, 6, 8, 9, 10}],
-             [5, 6, 9, {1, 2, 3, 4, 7, 8, 10}]],20)
-    c = [i for i in range(1,11)]
-    print find_axes(node,c)
+             [5, 6, 9, {1, 2, 3, 4, 7, 8, 10}]], 20)
+    c = [i for i in range(1, 11)]
+    print find_axes(node, c)
