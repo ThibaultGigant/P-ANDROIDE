@@ -325,7 +325,7 @@ def find_permutation_dynamic_programming(similarity_matrix, candidates_set, func
     for combination in candidates_combinations:
         comb = Set(combination)
         current_candidate = candidates_set.symmetric_difference(comb).an_element()
-        function_map = find_permutation_dynamic_programming(similarity_matrix, comb, function_map)  # recursive call
+        function_map = find_permutation_dynamic_programming(similarity_matrix, comb, function_map, weighted)  # recursive call
 
         scores = distance(similarity_matrix, comb, current_candidate, function_map, weighted)
         for score in scores:

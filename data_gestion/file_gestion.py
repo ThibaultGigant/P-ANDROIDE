@@ -139,7 +139,7 @@ def read_directory(dirname):
 
 def remove_unwanted_candidates(structure, unwanted_candidates):
     """
-    Removes unwanted candidates to the structure, including in the preferences
+    Removes unwanted candidates from the structure, including in the preferences
     :param structure: structure we want to remove the candidates from
     :param unwanted_candidates: list of IDs of unwanted candidates
     :type unwanted_candidates: list
