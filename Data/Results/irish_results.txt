@@ -1,12 +1,20 @@
-../Data/irish/ED-00001-00000001.toc
-calculation time: 68.2597489357 seconds
+Data/irish/ED-00001-00000001.toc
+calculation time: 73.836810112 seconds
 axes: (56, [[6, 12, 4, 9, 10, 7, 2, 1, 5, 8, 3, 11], [6, 12, 4, 10, 9, 7, 2, 1, 5, 8, 3, 11], [11, 3, 8, 5, 1, 2, 7, 9, 10, 4, 12, 6], [11, 3, 8, 5, 1, 2, 7, 10, 9, 4, 12, 6]])
+['Michael Kennedy F.F.', 'G.V. Wright F.F.', 'Jim Glennon F.F.', 'Sean Ryan Lab', 'Trevor Sargent G.P.', 'Nora Owen F.G.', 'Clare Daly S.P.', 'Cathal Boland F.G.', 'Ciaran Goulding Non-P', 'Eamonn Quinn Non-P', 'Mick Davis S.F.', 'David Henry Walshe C.C. Csp']
+['Michael Kennedy F.F.', 'G.V. Wright F.F.', 'Jim Glennon F.F.', 'Trevor Sargent G.P.', 'Sean Ryan Lab', 'Nora Owen F.G.', 'Clare Daly S.P.', 'Cathal Boland F.G.', 'Ciaran Goulding Non-P', 'Eamonn Quinn Non-P', 'Mick Davis S.F.', 'David Henry Walshe C.C. Csp']
+['David Henry Walshe C.C. Csp', 'Mick Davis S.F.', 'Eamonn Quinn Non-P', 'Ciaran Goulding Non-P', 'Cathal Boland F.G.', 'Clare Daly S.P.', 'Nora Owen F.G.', 'Sean Ryan Lab', 'Trevor Sargent G.P.', 'Jim Glennon F.F.', 'G.V. Wright F.F.', 'Michael Kennedy F.F.']
+['David Henry Walshe C.C. Csp', 'Mick Davis S.F.', 'Eamonn Quinn Non-P', 'Ciaran Goulding Non-P', 'Cathal Boland F.G.', 'Clare Daly S.P.', 'Nora Owen F.G.', 'Trevor Sargent G.P.', 'Sean Ryan Lab', 'Jim Glennon F.F.', 'G.V. Wright F.F.', 'Michael Kennedy F.F.']
 
-../Data/irish/ED-00001-00000002.toc
-calculation time: 3.54051804543 seconds
+Data/irish/ED-00001-00000002.toc
+calculation time: 3.85180997849 seconds
 axes: (16, [[3, 5, 7, 2, 9, 4, 1, 6, 8], [8, 6, 1, 4, 9, 2, 7, 5, 3]])
+['Deirdre Doherty Ryan F.F.', 'Brian Lenihan F.F.', 'Tom Morrissey P.D.', 'Joan Burton Lab', 'Sheila Terry F.G.', 'Joe Higgins S.P.', 'Robert Bonnie G.P.', 'Mary Lou Mc Donald S.F.', 'John Thomas Smyth C.C. Csp']
+['John Thomas Smyth C.C. Csp', 'Mary Lou Mc Donald S.F.', 'Robert Bonnie G.P.', 'Joe Higgins S.P.', 'Sheila Terry F.G.', 'Joan Burton Lab', 'Tom Morrissey P.D.', 'Brian Lenihan F.F.', 'Deirdre Doherty Ryan F.F.']
 
-../Data/irish/ED-00001-00000003.toc
-calculation time: 509.250120878 seconds
+Data/irish/ED-00001-00000003.toc
+calculation time: 554.91784215 seconds
 axes: (88, [[11, 3, 9, 8, 10, 7, 14, 6, 5, 2, 13, 4, 1, 12], [12, 1, 4, 13, 2, 5, 6, 14, 7, 10, 8, 9, 3, 11]])
+['Michael Redmond C.C. Csp', 'Jane Colwell Non-P', "Pat O'Brien Non-P", 'Tom Kelly Non-P', "Fergal O'Byrne G.P.", 'Brian Fitzgerald Non-P', 'Peter Ward Lab', 'John V Farrelly F.G.', 'Damien English F.G.', 'John Bruton F.G.', 'Mary Wallace F.F.', 'Noel Dempsey F.F.', 'Johnny Brady F.F.', 'Joe Reilly S.F.']
+['Joe Reilly S.F.', 'Johnny Brady F.F.', 'Noel Dempsey F.F.', 'Mary Wallace F.F.', 'John Bruton F.G.', 'Damien English F.G.', 'John V Farrelly F.G.', 'Peter Ward Lab', 'Brian Fitzgerald Non-P', "Fergal O'Byrne G.P.", 'Tom Kelly Non-P', "Pat O'Brien Non-P", 'Jane Colwell Non-P', 'Michael Redmond C.C. Csp']
 
