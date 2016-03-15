@@ -21,7 +21,7 @@ def bandb(preferences, candidates, node, enum_list):
         (nb_voters, ballot) = new_preferences[0]
         new_preferences.remove((nb_voters, ballot))
 
-        # Modification
+        # Modification : start bound at nb_voters
         if not node:
             node = ([], 0)
             new_node = ([ballot], nb_voters)
