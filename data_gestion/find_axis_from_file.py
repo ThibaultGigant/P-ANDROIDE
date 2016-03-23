@@ -8,21 +8,39 @@ from getopt import getopt
 import sys
 
 
-def find_axis_from_structure(structure, dissimilarity_function=dissimilarity_over_over, weighted=False):
+def find_axis_from_structure(structure, dissimilarity_function=dissimilarity_over_over,
+                             weighted=False, unwanted_candidates=[]):
     """
     Finds the axes coherent with the data in the structure
     :param structure: data extracted from an election file
     :param dissimilarity_function: function to use to calculate dissimilarity between 2 candidates
     :param weighted: if True, matrices scores are calculated with the weighted gradient
+    :param unwanted_candidates: list of candidates to exclude from the search
     :return: calculation time and optimal permutations for this structure
     """
-    candidates_set = Set(structure["candidates"].keys())
+    # candidates_set = Set(structure["candidates"].keys())
+
+    # Creating a conversion table to make the calculations easier
+    i = 1
+    conversion_table = {}
+    for candidate in structure["candidates"].keys():
+        if candidate not in unwanted_candidates:
+            conversion_table[i] = candidate
+            i += 1
 
     t = time()
     similarity_matrix = create_similarity_matrix(structure, dissimilarity_function)
-    optimal_permutations = find_permutation_dynamic_programming(similarity_matrix, candidates_set, {}, weighted)
 
-    return time()-t, optimal_permutations[candidates_set]
+    candidates_set = Set(range(1, len(conversion_table)+1))
+    candidates = [i-1 for i in conversion_table.values()]
+    candidates.sort()
+
+    optimal_permutations = find_permutation_dynamic_programming(similarity_matrix.matrix_from_rows_and_columns(candidates, candidates),
+                                                                candidates_set, {}, weighted)
+
+    res = (optimal_permutations[candidates_set][0], [[conversion_table[i] for i in l] for l in optimal_permutations[candidates_set][1]])
+
+    return time()-t, res
 
 
 def write_results_on_file(input_directory, output_file, dissimilarity_function=dissimilarity_over_over,
@@ -41,11 +59,9 @@ def write_results_on_file(input_directory, output_file, dissimilarity_function=d
 
     for f in files:
         structure = read_file(f, strict)
-        if unwanted_candidates:
-            structure = remove_unwanted_candidates(structure, unwanted_candidates)
         print(f)
         fp.write(str(f) + "\n")
-        t, optimal_permutations = find_axis_from_structure(structure, dissimilarity_function, weighted)
+        t, optimal_permutations = find_axis_from_structure(structure, dissimilarity_function, weighted, unwanted_candidates)
         print(t)
         fp.write("calculation time: " + str(t) + " seconds\n")
         fp.write("axes: " + str(optimal_permutations) + "\n")

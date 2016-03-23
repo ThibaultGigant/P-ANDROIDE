@@ -146,7 +146,7 @@ def read_file(filename, strict=False):
             "preferences": prefs}
 
 
-def read_directory(dirname):
+def read_directory(dirname, strict=False):
     """
     Reads the files in the directory and returns concatenation of the data contents
     :param dirname: absolute or relative path to the directory
@@ -161,12 +161,12 @@ def read_directory(dirname):
     if not files:
         raise ValueError("No .toc files detected")
 
-    structure = read_file(files[0])
+    structure = read_file(files[0], strict)
 
     unique_orders = [pref[1] for pref in structure["preferences"]]
 
     for f in files[1:]:
-        temp_struct = read_file(f)
+        temp_struct = read_file(f, strict)
         structure["nb_voters"] += temp_struct["nb_voters"]
         structure["sum_vote_count"] += temp_struct["sum_vote_count"]
         for pref in temp_struct["preferences"]:
@@ -182,49 +182,9 @@ def read_directory(dirname):
     return structure
 
 
-def remove_unwanted_candidates_from_structure_and_preferences(structure, unwanted_candidates):
-    """
-    Removes unwanted candidates from the structure, including in the preferences
-    :param structure: structure we want to remove the candidates from
-    :param unwanted_candidates: list of IDs of unwanted candidates
-    :type unwanted_candidates: list
-    :return: the new structure without the unwanted candidates
-    """
-    new_structure = {"nb_candidates": structure["nb_candidates"] - len(unwanted_candidates), "candidates": {},
-                     "nb_voters": structure["nb_voters"], "sum_vote_count": structure["sum_vote_count"],
-                     "preferences": []}
-
-    # Modifying the candidates set and creating a conversion table to make the preferences transformation easier
-    i = 1
-    conversion_table = {}
-    for candidate in structure["candidates"].keys():
-        if candidate not in unwanted_candidates:
-            new_structure["candidates"][i] = structure["candidates"][candidate]
-            conversion_table[candidate] = i
-            i += 1
-
-    # Adding preferences after deleting unwanted_candidates
-    unique_orders = []
-    for nb_votes, pref in structure["preferences"]:
-        # cleaning the list of preferences from its unwanted candidates
-        temp = [conversion_table[i] for i in pref if i not in unwanted_candidates and isinstance(i, int)]
-        if not isinstance(pref[-1], int):
-            temp.append(Set([conversion_table[i] for i in pref[-1] if i not in unwanted_candidates]))
-        # adding of the list of preferences to the structure
-        if temp in unique_orders:
-            new_structure["preferences"][unique_orders.index(temp)][0] += nb_votes
-        else:
-            new_structure["preferences"].append([nb_votes, temp])
-            unique_orders.append(temp)
-
-    new_structure["nb_unique_orders"] = len(unique_orders)
-
-    return new_structure
-
-
 def remove_unwanted_candidates(structure, unwanted_candidates):
     """
-    Removes unwanted candidates from the structure
+    Removes unwanted candidates from the structure, including in the preferences
     :param structure: structure we want to remove the candidates from
     :param unwanted_candidates: list of IDs of unwanted candidates
     :type unwanted_candidates: list

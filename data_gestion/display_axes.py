@@ -19,8 +19,24 @@ def get_matches(axis):
     return res
 
 
+def filter_symmetric_axes(permutations):
+    """
+    Filter the list of permutations to keep only one axis when 2 are symmetric
+    :param permutations: list of permutations found
+    :type permutations: list[list[int]]
+    :return: the filtered list of permutations
+    :rtype: list[list[int]]
+    """
+    filtered_permutations = []
+    for permutation in permutations:
+        if list(reversed(permutation)) not in filtered_permutations:
+            filtered_permutations.append(permutation)
+    return filtered_permutations
+
+
 def axes_to_latex_graph(filename, axis, name=None,
-                        dissimilarity_function=dissimilarity_over_over, weighted=False, strict=False):
+                        dissimilarity_function=dissimilarity_over_over, weighted=False, strict=False,
+                        unwanted_candidates=[]):
     """
     Returns the LaTeX code to display the axis
     :param filename: relative path to the election data file
@@ -32,12 +48,14 @@ def axes_to_latex_graph(filename, axis, name=None,
     :return: string containing the LaTeX code
     """
     structure = read_file(filename, strict)
-    t, permutations = find_axis_from_structure(structure, dissimilarity_function, weighted)
+    t, permutations = find_axis_from_structure(structure, dissimilarity_function, weighted, unwanted_candidates)
+    permutations = filter_symmetric_axes(permutations[1])
     matches = get_matches(axis)
-    length_unit = str(len(matches) + 2)
-    res = "\\begin{center}\n"
+    length_unit = str(len(permutations[0]) + 1)
+    res = "\\section{" + str(name) + "}" if name else ""
+    res += "\\begin{center}\n"
 
-    for permutation in permutations[1]:
+    for permutation in permutations:
         # beginning of the environment
         res += "\\begin{figure}\n"
         res += "\\begin{tikzpicture}[x=\\textwidth/" + length_unit + ", y=\\textwidth/" + length_unit + "]\n"
@@ -58,7 +76,7 @@ def axes_to_latex_graph(filename, axis, name=None,
         res += temp  # ading the circles
         res += "\\end{tikzpicture}\n"
         if name:
-            res += "\\caption{Permutation " + str(permutations[1].index(permutation)) + " of " + name + "}\n"
+            res += "\\caption{Permutation " + str(permutations.index(permutation)) + " of " + name + "}\n"
         res += "\\end{figure}\n"
 
     res += "\\end{center}\n\\clearpage\n"
@@ -67,7 +85,8 @@ def axes_to_latex_graph(filename, axis, name=None,
 
 
 def all_files_to_latex(directory, files_list, axes_list, names_list,
-                       dissimilarity_function=dissimilarity_over_over, weighted=False, strict=None):
+                       dissimilarity_function=dissimilarity_over_over, weighted=False, strict=None,
+                       unwanted_candidates=[]):
     """
     Returns a string with all graphics from a list of files
     :param directory: path to the directory where all the files in files_list are
@@ -85,16 +104,100 @@ def all_files_to_latex(directory, files_list, axes_list, names_list,
     for i in range(len(files_list)):
         print(files_list[i])
         res += axes_to_latex_graph(join(directory, files_list[i]), axes_list[i], names_list[i],
-                                   dissimilarity_function, weighted, strict[i])
+                                   dissimilarity_function, weighted, strict[i], unwanted_candidates)
     return res
 
 
-if __name__ == '__main__':
-    # s = axes_to_latex_graph(join("Data/glasgow", listFiles[0]), listAxes[0], name=listWards[0])
-    # print(s)
-    s = all_files_to_latex("Data/all", listFiles, listAxes, listWards, strict=[True]*len(listFiles))
-
-    fp = open("Data/TeX/sortie.tex", "w")
+def launch_irish_glasgow():
+    # on Irish and Glasgow data
+    s = all_files_to_latex("Data/all", listFiles, listAxes, listWards, dissimilarity_function=dissimilarity_over_over,
+                           weighted=False, strict=[True]*len(listFiles))
+    fp = open("Data/TeX/irish_glasgow_over_over.tex", "w")
     fp.write(s)
     fp.close()
 
+    s = all_files_to_latex("Data/all", listFiles, listAxes, listWards, dissimilarity_function=dissimilarity_over_over,
+                           weighted=True, strict=[True]*len(listFiles))
+    fp = open("Data/TeX/irish_glasgow_over_over_weighted.tex", "w")
+    fp.write(s)
+    fp.close()
+
+    s = all_files_to_latex("Data/all", listFiles, listAxes, listWards, dissimilarity_function=dissimilarity_and_n,
+                           weighted=False, strict=[True]*len(listFiles))
+    fp = open("Data/TeX/irish_glasgow_and_n.tex", "w")
+    fp.write(s)
+    fp.close()
+
+    s = all_files_to_latex("Data/all", listFiles, listAxes, listWards, dissimilarity_function=dissimilarity_and_n,
+                           weighted=True, strict=[True]*len(listFiles))
+    fp = open("Data/TeX/irish_glasgow_and_n_weighted.tex", "w")
+    fp.write(s)
+    fp.close()
+
+    s = all_files_to_latex("Data/all", listFiles, listAxes, listWards, dissimilarity_function=dissimilarity_and_or,
+                           weighted=False, strict=[True]*len(listFiles))
+    fp = open("Data/TeX/irish_glasgow_and_or.tex", "w")
+    fp.write(s)
+    fp.close()
+
+    s = all_files_to_latex("Data/all", listFiles, listAxes, listWards, dissimilarity_function=dissimilarity_and_or,
+                           weighted=True, strict=[True]*len(listFiles))
+    fp = open("Data/TeX/irish_glasgow_and_or_weighted.tex", "w")
+    fp.write(s)
+    fp.close()
+
+
+def launch_french():
+    # on French data
+    s = all_files_to_latex("Data/all", listFrenchFiles, listFrenchAxes, listFrenchWards,
+                           dissimilarity_function=dissimilarity_over_over,
+                           weighted=False, strict=[False]*len(listFiles),
+                           unwanted_candidates=[2, 3, 7, 11])
+    fp = open("Data/TeX/french_over_over.tex", "w")
+    fp.write(s)
+    fp.close()
+
+    s = all_files_to_latex("Data/all", listFrenchFiles, listFrenchAxes, listFrenchWards,
+                           dissimilarity_function=dissimilarity_over_over,
+                           weighted=True, strict=[False]*len(listFiles),
+                           unwanted_candidates=[2, 3, 7, 11])
+    fp = open("Data/TeX/french_over_over_weighted.tex", "w")
+    fp.write(s)
+    fp.close()
+
+    s = all_files_to_latex("Data/all", listFrenchFiles, listFrenchAxes, listFrenchWards,
+                           dissimilarity_function=dissimilarity_and_n,
+                           weighted=False, strict=[False]*len(listFiles),
+                           unwanted_candidates=[2, 3, 7, 11])
+    fp = open("Data/TeX/french_and_n.tex", "w")
+    fp.write(s)
+    fp.close()
+
+    s = all_files_to_latex("Data/all", listFrenchFiles, listFrenchAxes, listFrenchWards,
+                           dissimilarity_function=dissimilarity_and_n,
+                           weighted=True, strict=[False]*len(listFiles),
+                           unwanted_candidates=[2, 3, 7, 11])
+    fp = open("Data/TeX/french_and_n_weighted.tex", "w")
+    fp.write(s)
+    fp.close()
+
+    s = all_files_to_latex("Data/all", listFrenchFiles, listFrenchAxes, listFrenchWards,
+                           dissimilarity_function=dissimilarity_and_or,
+                           weighted=False, strict=[False]*len(listFiles),
+                           unwanted_candidates=[2, 3, 7, 11])
+    fp = open("Data/TeX/french_and_or.tex", "w")
+    fp.write(s)
+    fp.close()
+
+    s = all_files_to_latex("Data/all", listFrenchFiles, listFrenchAxes, listFrenchWards,
+                           dissimilarity_function=dissimilarity_and_or,
+                           weighted=True, strict=[False]*len(listFiles),
+                           unwanted_candidates=[2, 3, 7, 11])
+    fp = open("Data/TeX/french_and_or_weighted.tex", "w")
+    fp.write(s)
+    fp.close()
+
+
+if __name__ == '__main__':
+    launch_irish_glasgow()
+    # launch_french()
