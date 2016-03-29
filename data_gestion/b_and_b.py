@@ -365,5 +365,5 @@ def exemple_generation():
     print("On explore " + str(len(bb)) + " noeuds parmi " + str(nodes(len(preferences))) + " noeuds.")
 
 if __name__ == '__main__':
-    exemple()
-    #exemple_generation()
+    #exemple()
+    exemple_generation()
