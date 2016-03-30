@@ -1,9 +1,13 @@
 #! /usr/bin/env sage -python
 # -*- coding: utf-8 -*-
 
+import sys
+from os import getcwd
+sys.path.append(getcwd())
+
 from sage.all import Set, matrix
 from itertools import permutations, combinations
-from generation import generation
+from data_gestion.generation import generation
 from time import time
 
 

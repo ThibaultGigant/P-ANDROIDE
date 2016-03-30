@@ -1,0 +1,11 @@
+Data/frenchapproval/
+calculation time: 72.2385630608 seconds
+axes: (58, [[1, 4, 5, 10, 3, 2, 9, 6, 7, 11, 12, 8], [1, 5, 4, 10, 3, 2, 9, 6, 7, 11, 12, 8], [1, 4, 5, 10, 3, 2, 9, 7, 6, 11, 12, 8], [1, 5, 4, 10, 3, 2, 9, 7, 6, 11, 12, 8], [8, 12, 11, 6, 7, 9, 2, 3, 10, 4, 5, 1], [8, 12, 11, 7, 6, 9, 2, 3, 10, 4, 5, 1], [8, 12, 11, 6, 7, 9, 2, 3, 10, 5, 4, 1], [8, 12, 11, 7, 6, 9, 2, 3, 10, 5, 4, 1]])
+['Megret', 'LePen', 'Saint-Josse', 'Madelin', 'Chirac', 'Bayrou', 'Chevenement', 'Mamere', 'Jospin', 'Laguiller', 'Besancenot', 'Hue']
+['Megret', 'Saint-Josse', 'LePen', 'Madelin', 'Chirac', 'Bayrou', 'Chevenement', 'Mamere', 'Jospin', 'Laguiller', 'Besancenot', 'Hue']
+['Megret', 'LePen', 'Saint-Josse', 'Madelin', 'Chirac', 'Bayrou', 'Chevenement', 'Jospin', 'Mamere', 'Laguiller', 'Besancenot', 'Hue']
+['Megret', 'Saint-Josse', 'LePen', 'Madelin', 'Chirac', 'Bayrou', 'Chevenement', 'Jospin', 'Mamere', 'Laguiller', 'Besancenot', 'Hue']
+['Hue', 'Besancenot', 'Laguiller', 'Mamere', 'Jospin', 'Chevenement', 'Bayrou', 'Chirac', 'Madelin', 'LePen', 'Saint-Josse', 'Megret']
+['Hue', 'Besancenot', 'Laguiller', 'Jospin', 'Mamere', 'Chevenement', 'Bayrou', 'Chirac', 'Madelin', 'LePen', 'Saint-Josse', 'Megret']
+['Hue', 'Besancenot', 'Laguiller', 'Mamere', 'Jospin', 'Chevenement', 'Bayrou', 'Chirac', 'Madelin', 'Saint-Josse', 'LePen', 'Megret']
+['Hue', 'Besancenot', 'Laguiller', 'Jospin', 'Mamere', 'Chevenement', 'Bayrou', 'Chirac', 'Madelin', 'Saint-Josse', 'LePen', 'Megret']

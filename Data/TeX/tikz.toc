@@ -1,0 +1,25 @@
+\select@language {french}
+\contentsline {section}{\numberline {1}1. Linn}{2}{section.1}
+\contentsline {section}{\numberline {2}2. Newlands}{4}{section.2}
+\contentsline {section}{\numberline {3}3. GreaterPollock}{6}{section.3}
+\contentsline {section}{\numberline {4}4. Craigton}{8}{section.4}
+\contentsline {section}{\numberline {5}5. Govan}{10}{section.5}
+\contentsline {section}{\numberline {6}6. Pollokshields}{13}{section.6}
+\contentsline {section}{\numberline {7}7. Langside}{15}{section.7}
+\contentsline {section}{\numberline {8}8. SouthsideCentral}{17}{section.8}
+\contentsline {section}{\numberline {9}9. Calton}{19}{section.9}
+\contentsline {section}{\numberline {10}10. Anderston}{22}{section.10}
+\contentsline {section}{\numberline {11}11. Hillhead}{26}{section.11}
+\contentsline {section}{\numberline {12}12. PartickWest}{29}{section.12}
+\contentsline {section}{\numberline {13}13. Garscadden}{31}{section.13}
+\contentsline {section}{\numberline {14}14. Drumchapel}{33}{section.14}
+\contentsline {section}{\numberline {15}15. Maryhill}{35}{section.15}
+\contentsline {section}{\numberline {16}16. Canal}{38}{section.16}
+\contentsline {section}{\numberline {17}17. Springburn}{40}{section.17}
+\contentsline {section}{\numberline {18}18. EastCentre}{42}{section.18}
+\contentsline {section}{\numberline {19}19. Shettleston}{45}{section.19}
+\contentsline {section}{\numberline {20}20. Baillieston}{47}{section.20}
+\contentsline {section}{\numberline {21}21. NorthEast}{51}{section.21}
+\contentsline {section}{\numberline {22}1. Dublin North}{54}{section.22}
+\contentsline {section}{\numberline {23}2. Dublin West}{57}{section.23}
+\contentsline {section}{\numberline {24}3. Meath}{59}{section.24}

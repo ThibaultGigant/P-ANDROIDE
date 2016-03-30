@@ -1,7 +1,11 @@
 #! /usr/bin/env sage -python
 # -*- coding: utf-8 -*-
 
-from generation import generation
+import sys
+from os import getcwd
+sys.path.append(getcwd())
+
+from data_gestion.generation import generation
 from copy import copy
 from time import time
 from sage.all import Set

@@ -1,5 +1,10 @@
+# -*- coding: utf-8 -*-
+import sys
+from os import getcwd
+sys.path.append(getcwd())
+
 from sage.all import Set
-from file_gestion import *
+from data_gestion.file_gestion import *
 from similarity_matrix import *
 from time import time
 from os import listdir

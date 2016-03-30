@@ -1,8 +1,12 @@
-from axesPAndroide import *
-from file_gestion import read_file
+from os.path import join
+import sys
+from os import getcwd
+sys.path.append(getcwd())
+
+from Data.axesPAndroide import *
+from data_gestion.file_gestion import read_file
 from find_axis_from_file import find_axis_from_structure
 from similarity_matrix import *
-from os.path import join
 
 
 def get_matches(axis):

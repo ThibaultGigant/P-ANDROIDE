@@ -1,8 +1,11 @@
 #! /usr/bin/env sage -python
 # -*- coding: utf-8 -*-
-# import sys
-# from file_gestion import read_file
-from generation import generation
+import sys
+from os import getcwd
+
+sys.path.append(getcwd())
+
+from data_gestion.generation import generation
 from sage.all import Set
 from sage.graphs.pq_trees import reorder_sets
 from itertools import chain, combinations
