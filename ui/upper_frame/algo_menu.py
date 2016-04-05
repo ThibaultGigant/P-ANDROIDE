@@ -19,24 +19,24 @@ class AlgoMenu(Frame):
         """
         # Variables declaration
         dissimilarity = IntVar()
-        weighted = IntVar()
+        weighted = BooleanVar()
         self.algo.set(1)
         dissimilarity.set(0)
         weighted.set(0)
 
         # Widgets declaration
         label_algo = Label(self, text="Choose algorithm:", font=("", 16))
-        radio_bnb = Radiobutton(self, text="Branch & Bound", variable=self.algo)
-        radio_seriation = Radiobutton(self, text="Seriation", variable=self.algo)
+        radio_bnb = Radiobutton(self, text="Branch & Bound", variable=self.algo, value=0)
+        radio_seriation = Radiobutton(self, text="Seriation", variable=self.algo, value=1)
 
         label_dissimilarity = Label(self, text="Choose the function used to calculate the dissimilarity matrix:",
                                     font=("", 14))
-        radio_and_n = Radiobutton(self, text="Both candidates over all ballots", variable=dissimilarity)
-        radio_and_or = Radiobutton(self, text="Both candidates over ballots with one or the other", variable=dissimilarity)
-        radio_over_over = Radiobutton(self, text="Sum of inverse number of ballots with both candidates over sum of inverse number of ballots with one or the other", variable=dissimilarity)
-        label_weighted = Label(text="Weighted calculation :", font=("", 14))
-        radio_weighted = Radiobutton(self, text="Weighted", variable=weighted)
-        radio_unweighted = Radiobutton(self, text="Not Weighted", variable=weighted)
+        radio_and_n = Radiobutton(self, text="Both candidates over all ballots", variable=dissimilarity, value=0)
+        radio_and_or = Radiobutton(self, text="Both candidates over ballots with one or the other", variable=dissimilarity, value=1)
+        radio_over_over = Radiobutton(self, text="Sum of inverse number of ballots with both candidates over sum of inverse number of ballots with one or the other", variable=dissimilarity, value=2)
+        label_weighted = Label(self, text="Weighted calculation :", font=("", 14))
+        radio_weighted = Radiobutton(self, text="Weighted", variable=weighted, value=True)
+        radio_unweighted = Radiobutton(self, text="Not Weighted", variable=weighted, value=False)
         self.disabled += [label_dissimilarity, radio_and_n, radio_and_or, radio_over_over,
                           label_weighted, radio_weighted, radio_unweighted]
 
@@ -53,7 +53,7 @@ class AlgoMenu(Frame):
         radio_weighted.grid(row=7, column=1)
         radio_unweighted.grid(row=7, column=2)
 
-        self.algo.trace("w", self.enable_or_disable)
+        self.algo.trace("w", lambda name, index, mode: self.enable_or_disable())
 
     def enable_or_disable(self):
         """

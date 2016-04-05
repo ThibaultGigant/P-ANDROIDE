@@ -17,14 +17,14 @@ class FilesMenu(Frame):
         label = Label(self, text="Choose files:", font=("", 16))
         label.grid()
         for f in listFiles:
-            # print f
             checkbtn = Checkbutton(self, text=f, command=lambda: self.add_file(f), padx=10)
             checkbtn.grid()
-        # print "out"
 
     def add_file(self, filename):
         print "called"
         if filename in self.list_files:
             self.list_files.remove(filename)
+            print self.list_files
         else:
             self.list_files.append(filename)
+            print self.list_files

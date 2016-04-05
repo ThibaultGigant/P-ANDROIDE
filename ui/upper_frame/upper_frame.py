@@ -21,6 +21,8 @@ class UpperFrame(Frame):
         self.pack_elements()
 
     def pack_elements(self):
-        self.left_frame.pack(side=LEFT)
-        self.right_frame.pack(side=RIGHT)
+        if self.left_frame:
+            self.left_frame.pack(side=LEFT)
+        if self.right_frame:
+            self.right_frame.pack(side=RIGHT)
 
