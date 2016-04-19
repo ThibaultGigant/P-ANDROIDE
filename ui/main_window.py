@@ -34,7 +34,6 @@ class MainWindow(Frame):
     def pack_elements(self):
         self.pack_upper_frame()
         self.pack_lower_frame()
-        # print "outt"
 
     def set_upper_frame(self, frame):
         """
