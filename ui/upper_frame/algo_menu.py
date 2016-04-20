@@ -37,7 +37,7 @@ class AlgoMenu(Frame):
         self.algo.set(1)
 
         # Widgets declaration
-        label_algo = Label(self.frame_algos, text="Choose algorithm:", font=("", 16))
+        label_algo = Label(self.frame_algos, text="Choose the algorithm to launch:", font=("", 16))
         radio_bnb = Radiobutton(self.frame_algos, text="Branch & Bound", variable=self.algo, value=0)
         radio_seriation = Radiobutton(self.frame_algos, text="Seriation", variable=self.algo, value=1)
 
@@ -59,7 +59,7 @@ class AlgoMenu(Frame):
 
         # Widgets declaration
         label_dissimilarity = Label(self.frame_params, text="Choose the function used to calculate the dissimilarity matrix:",
-                                    font=("", 12))
+                                    font=("", 14))
         radio_and_n = Radiobutton(self.frame_params, text="Both candidates over all ballots", variable=self.dissimilarity, value=0)
         radio_and_or = Radiobutton(self.frame_params, text="Both candidates over ballots with one or the other",
                                    variable=self.dissimilarity, value=1)
@@ -79,15 +79,23 @@ class AlgoMenu(Frame):
         radio_weighted.grid(row=4, column=1)
         radio_unweighted.grid(row=4, column=2)
 
-        self.frame_params.pack()
+        self.frame_params.pack(padx=10)
 
     def add_launch_btn(self):
         """
         Adds a button to launch the choosed algorithm with right parameters
-        :return:
         """
-        self.launch_btn = Button(self, text="Launch Algorithm")
+        self.launch_btn = Button(self, text="Launch Algorithm", command=self.launch)
         self.launch_btn.pack()
+
+    def launch(self):
+        """
+        Launch the algorithm with the files and options the user selected
+        """
+        if self.algo == 0:
+            pass
+        else:
+            pass
 
     def enable_or_disable(self):
         """

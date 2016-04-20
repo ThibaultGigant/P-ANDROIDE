@@ -3,12 +3,12 @@ from Tkinter import *
 from Data.axesPAndroide import *
 
 
-class FilesMenu(Frame):
+class FilesMenu(LabelFrame):
     """
     Adds all widgets to select files to test
     """
     def __init__(self, master):
-        Frame.__init__(self, master)
+        LabelFrame.__init__(self, master, text="Choose files")
         self.parent = master
         self.list_files = []
         self.check_buttons = []
@@ -27,10 +27,7 @@ class FilesMenu(Frame):
         :param filename:
         :return:
         """
-        print "called"
         if filename in self.list_files:
             self.list_files.remove(filename)
-            print self.list_files
         else:
             self.list_files.append(filename)
-            print self.list_files

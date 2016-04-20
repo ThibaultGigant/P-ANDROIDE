@@ -16,20 +16,18 @@ class MainWindow(Frame):
         Frame.__init__(self, master)
         self.parent = master
         self.mode = "benchmark"
-        # self.top_menu = TopMenu(self)
+        self.top_menu = TopMenu(self)
         self.upper_frame = UpperFrame(self)
-        # self.upper_frame = None
         self.lower_frame = None
         self.pack_elements()
-        Label(self, text="Test").pack()
 
     def pack_upper_frame(self):
         if self.upper_frame:
-            self.upper_frame.pack(side=TOP)
+            self.upper_frame.pack(side=TOP, padx=10, pady=10)
 
     def pack_lower_frame(self):
         if self.lower_frame:
-            self.lower_frame.pack(side=BOTTOM)
+            self.lower_frame.pack(side=BOTTOM, padx=10, pady=10)
 
     def pack_elements(self):
         self.pack_upper_frame()
@@ -69,14 +67,5 @@ def launch():
     root.mainloop()
 
 
-def test():
-    fenetre = Tk()
-
-    UpperFrame(fenetre).pack()
-
-    fenetre.mainloop()
-
-
 if __name__ == '__main__':
-    #launch()
-    test()
+    launch()
