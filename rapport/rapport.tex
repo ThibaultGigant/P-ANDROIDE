@@ -1,4 +1,4 @@
-\documentclass[11pt, letterpaper]{article}
+\documentclass[11pt, a4paper]{article}
 \usepackage[latin1]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[frenchb]{babel}
@@ -6,6 +6,8 @@
 \usepackage{listings}
 \usepackage{graphicx}
 \usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{float}
 
 \newcommand{\hmark}{\rule{\linewidth}{0.5mm}}
 
@@ -17,7 +19,7 @@
 
 \begin{figure}[t]
 \begin{center}
-\includegraphics[width=8cm]{upmc.png}
+\includegraphics[width=8cm]{Images/upmc.png}
 \end{center}
 \end{figure}
 
@@ -53,12 +55,125 @@ Olivier \textsc{Spanjaard}
 
 \pagestyle{fancy}
 \renewcommand{\headrulewidth}{1pt}
-\lhead{\textbf{P-ANDROIDE -- Mod\`{e}les graphiques pour le choix social computationnel}}
+\lhead{\textbf{P-ANDROIDE -- Choix Social Computationnel}}
 
 \section*{Introduction}
 \addcontentsline{toc}{section}{Introduction}
+Habituellement, lors d'un vote, l'\'{e}lecteur est amen\'{e} \`{a} choisir un unique candidat parmi une multitude. Ainsi, il est tr\`{e}s facile de compartimenter les votants \`{a} partir de leur vote, connaissant les affiliations de chaque candidat. En revanche, lorsqu'il est donn\'{e} la possibilit\'{e} aux \'{e}lecteurs de ne plus voter pour un seul candidat, mais pour un sous-ensemble d'entre eux qu'il approuverait, la tache se complique. Avec cette proc\'{e}dure de vote, qu'on dit par approbation, il peut \^{e}tre int\'{e}ressant de voir le probl\`{e}me sous un autre angle. On peut \'{e}tudier les diff\'{e}rents votes formul\'{e}s et tenter d'en extraire un axe \og gauche-droite \fg{} classant les candidats les uns par rapport aux autres en fonction de leur proximit\'{e} dans les bulletins récoltés.
 
-\newpage
+Il existe des algorithmes pour r\'{e}soudre ce probl\`{e}me, et dans ce projet deux principales m\'{e}thodes seront utilis\'{e}es :
+\begin{itemize}
+	\item R\'{e}aliser un \og Branch \& Bound \fg{} sur l'ensemble des bulletins de vote pour identifier un sous-ensemble le plus large possible de bulletins coh\'{e}rents avec un axe.
+	\item Utiliser un algorithme de s\'{e}riation permettant de calculer l'axe qui cr\'{e}e le moins d'incoh\'{e}rences possibles grâce une matrice de similarit\'{e} entre les candidats, cr\'{e}\'{e}e gr\^{a}ce aux bulletins de vote.
+\end{itemize}
+
+Ces deux approches seront plus amplement d\'{e}taill\'{e}es dans la seconde partie de ce rapport. La première partie quant à elle détaillera les différentes tâches qui ont été demandées par l'encadrant. La troisième partie concernera l'implémentation en elle-même, le logiciel créé pour répondre à ces tâches. Enfin, une dernière partie donnera les résultats des algorithmes appliqués à des données réelles.
+
+
+\section{Cahier des charges}
+Deux approches ont donc été demandées, la première étant une approche par sériation et la seconde par Branch \& Bound. De plus, une interface graphique pour lancer les algorithmes et visualiser les résultats a été requise.
+
+\subsection{S\'{e}riation}
+La première méthode qui sera utilisée appliquera un algorithme de sériation. Le principe est de calculer une matrice dont chaque élément représente la dissimilarité entre les candidats. Celle-ci peut être calculée de plusieurs manières, et chacune sera étudiée et comparée aux autres, pour déterminer laquelle correspond le plus à la recherche de l'axe voulu. Cette valeur est un réel compris entre 0 et 1, tel que 0 représente une similarité parfaite, et 1 une dissimilarité totale. Ainsi, l'élément en position $ij$ de la matrice donnera la dissimilarité entre le candidat $i$ et le candidat $j$. Bien entendu, cette matrice est parfaitement symétrique et a pour diagonale principale des 0. Elle peut donc être considérée comme une matrice strictement triangulaire supérieur, puisque la diagonale ne changera pas et la partie inférieure n'est que le miroir de la partie supérieure.
+
+A partir de cette matrice, pour trouver un axe parmi les candidats, il suffit alors de trouver une permutation des lignes et des colonnes (donc des candidats) qui rajoute une caractéristique à cette matrice. Cette permutation doit rendre les éléments sur les lignes et les colonnes croissants au fur et à mesure que l'on s'éloigne de la diagonale. Pour ceci, deux solutions s'imposent :\\
+\begin{itemize}
+	\item  \textbf{La force brute} ~  qui prend toutes les permutations possibles de l'axe des candidats, calcule un score à partir de la matrice de dissimilarité de chaque permutation, et renvoie celle donnant le score minimal. Cette méthode naïve sera implémentée, mais étant donnée sa complexité exponentielle, puisqu'elle demande de calculer le score des $n!$ axes possibles ($n$ étant le nombre de candidats), elle ne sera utilisée que pour vérifier la validité de la solution suivante, avec un nombre de candidats restreint.\\
+	\item \textbf{La programmation dynamique} ~ Algorithme inspiré des travaux de \textsc{Hubert}. Il permet, un peu comme avec l'algorithme de \og Branch \& Bound \fg{} vu précédemment, de n'explorer que les sous-ensembles des permutations qui semblent les plus prometteuses.
+\end{itemize}
+
+\subsection{Branch \& Bound}
+
+Pour trouver la solution optimale du probl\`{e}me, il faut utiliser une m\'{e}thode exacte, comme le \og Branch \& Bound \fg{} qui sera repr\'{e}sent\'{e} par un arbre de recherche binaire. Chaque sous-probl\`{e}me cr\'{e}\'{e} au cours de l'exploration est d\'{e}sign\'{e} par un n\oe{}ud qui repr\'{e}sente les bulletins contenus dans le sous-ensemble. Les branches de l'arbre symbolisent le processus de s\'{e}paration, elles repr\'{e}sentent la relation entre les n\oe{}uds (ajouter le bulletin $i$ dans le sous-ensemble ou non). Cette m\'{e}thode arborescente nous permettra donc d'\'{e}num\'{e}rer toutes les solutions possibles.
+
+L'algorithme d'\'{e}num\'{e}ration compl\`{e}te des solutions peut \^{e}tre illustr\'{e} par une arborescence de hauteur $n$, o\`{u} \`{a} chaque n\oe{}ud on consid\`{e}re les 2 valeurs possibles pour un bulletin. En chacune des 2$n$ feuilles, on a une solution possible qui correspond ou non \`{a} une solution admissible dont on peut trouver l'axe correspondant (si ce dernier existe) et on retient la meilleure solution obtenue, qui dans ce cas, sera l'ensemble le plus large de bulletins coh\'{e}rent avec un axe.
+
+Pour am\'{e}liorer la complexit\'{e} du \og Branch \& Bound \fg, seules les solutions potentiellement de bonne qualit\'{e} seront \'{e}num\'{e}r\'{e}es, les solutions ne pouvant pas conduire \`{a} am\'{e}liorer la solution courante ne sont pas explor\'{e}es. \\
+
+Le \og Branch \& Bound \fg{} est bas\'{e} sur trois principes : \\
+
+\begin{itemize}
+	
+	\item \textbf{Principe de s\'{e}paration} ~ Le principe de s\'{e}paration consiste \`{a} diviser le probl\`{e}me en un certain nombre de sous-probl\`{e}mes qui ont chacun leur ensemble de solutions r\'{e}alisables. En r\'{e}solvant tous les sous-probl\`{e}mes et en prenant la meilleure solution trouv\'{e}e, on est assur\'{e} d'avoir r\'{e}solu le probl\`{e}me initial. Ce principe de s\'{e}paration est appliqu\'{e} de mani\`{e}re r\'{e}cursive \`{a} chacun des sous-ensembles tant que celui-ci contient plusieurs solutions. \\
+	Remarque : La proc\'{e}dure de s\'{e}paration d'un ensemble s'arr\^{e}te lorsqu'une des conditions
+	suivantes est v\'{e}rifi\'{e}e : \\
+	-- on sait que l'ensemble ne contient aucune solution admissible (cas o\`{u} l'un des bulletins n'est pas coh\'{e}rent avec les axes trouv\'{e}s) ; \\
+	-- on conna\^{i}t une solution meilleure que toutes celles de l'ensemble ; \\
+	
+	\item \textbf{Principe d'\'{e}valuation} ~  Le principe d'\'{e}valuation a pour objectif de conna\^{i}tre la qualit\'{e} des n\oe{}uds \`{a} traiter. La m\'{e}thode de \og Branch and Bound \fg{} utilise deux types de bornes : une borne inf\'{e}rieure de la fonction d'utilit\'{e} du probl\`{e}me initial et une borne sup\'{e}rieure de la fonction d'utilit\'{e}. La connaissance d'une borne inf\'{e}rieure du probl\`{e}me et d'une borne sup\'{e}rieure de la fonction d'utilit\'{e} de chaque sous-probl\`{e}me permet d'arr\^{e}ter  l'exploration d'un sous-ensemble de
+	solutions qui ne sont pas candidats \`{a} l'optimalit\'{e}. \\
+	
+	\item \textbf{Parcours de l'arbre} ~ Le type de parcours de l'arbre permet de choisir le prochain n\oe{}ud \`{a} s\'{e}parer parmi l'ensemble des n\oe{}uds de l'arborescence. L'exploration en profondeur privil\'{e}gie les sous-probl\`{e}mes obtenus par le plus grand nombre de s\'{e}parations appliqu\'{e}es au probl\`{e}me de d\'{e}part, c'est-\`{a}-dire aux sommets les plus \'{e}loign\'{e}s de la racine (donc de profondeur la plus \'{e}lev\'{e}e). L'obtention \og rapide \fg{} d'une solution admissible en est l'avantage.
+	
+\end{itemize}
+
+\subsection{Interface graphique}
+L'interface demandée est une interface simple, permettant d'abord de choisir l'algorithme à appliquer, avec quelles caractéristiques, et sur quels fichiers. Deux modes ont dû être implémentés. L'un permet de réaliser des bancs d'essai, donnant des résultats détaillés pour tous les fichiers sélectionnés. L'autre est plus interactif, et affichera pour chaque instance un graphe reflétant les différences, s'il y en a, entre le ou les axes trouvés par l'algorithme et l'axe réel, récupéré manuellement depuis un site tel que \href{www.wikipedia.fr}{Wikipedia}.
+
+\section{Analyse et conception}
+Étudions un peu plus en détail chacun des algorithmes à implémenter.
+
+\subsection{Sériation}
+Le premier algorithme à implémenter est un algorithme par sériation. La sériation est la capacité à comparer deux entités pour les ranger dans un ordre précis. Par exemple dire qu'un objet est plus grand qu'un autre ou inversement. Dans le cas du problème posé, le but est de positionner les candidats les uns par rapport aux autres en fonction des préférences exprimées par les votants. En effet, il paraît normal que deux candidats présents dans un même bulletin ne devraient pas être éloignés l'un de l'autre dans l'axe.
+
+\subsubsection{1-Consécutifs}
+Pour obtenir cette comparaison entre candidats, et ainsi obtenir l'axe voulu, la technique des 1-consécutifs peut être appliquée. En effet, on peut créer une matrice dont chaque ligne représente un bulletin unique, et chaque colonne représente un candidat. Chaque ligne est alors composée uniquement de 0 et de 1, le 1 indiquant que le votant approuve le candidat correspondant, et le 0 qu'il ne l'approuve pas. Ainsi, en trouvant une permutation des colonnes telle que les 1 présents dans chaque ligne soient consécutifs, on trouve l'axe compatible avec les préférences formulées par les votants.
+
+Par exemple, prenons un vote simple composé de 4 candidats numérotés de 1 à 4, et 4 bulletins approuvant respectivement les sous-ensembles \{1,2,3\}, \{1,3\}, \{3,4\}, \{1,3,4\}. La résolution peut alors se résumer ainsi :
+
+\begin{figure}[H]
+	\begin{center}
+		\begin{minipage}{0.4\textwidth}
+			\begin{center}
+				\includegraphics[scale=0.5]{Images/avant_permutation.png}
+			\end{center}
+		\end{minipage}
+		\begin{minipage}{0.1\textwidth}
+			\begin{Huge}
+				$\Longrightarrow$
+			\end{Huge}
+		\end{minipage}
+		\begin{minipage}{0.4\textwidth}
+			\begin{center}
+				\includegraphics[scale=0.5]{Images/apres_permutation.png}
+			\end{center}
+		\end{minipage}
+	\end{center}
+	\caption{Illustration du Problème des 1-consécutifs}
+\end{figure}
+Un axe compatible avec les votes est donc 2,1,3,4 dans ce cas. Aucun 1 n'étant séparé d'un autre 1 de la même ligne par un 0.
+
+Cependant, pour que cette technique fonctionne, il faut que les préférences soient unimodales. C'est-à-dire qu'il faut que tous les votants soient d'accord avec l'axe, et que les préférences de chaque votant diminuent le long de l'axe lorsqu'on s'éloigne de son alternative préférée. Cependant, cette condition nécessaire est très exigeante. Il est très peu probable que les personnes allant voter soient toutes cohérentes avec l'axe gauche-droite réel, ou même qu'aucune erreur ne se glisse dans un ou plusieurs bulletins. C'est pourquoi, il faut alors chercher l'axe qui cause le moins d'incompatibilités. On peut alors calculer un score à chaque permutation de la matrice, score représentant par exemple le nombre de 0 séparant des 1. La permutation donnant un score minimal sera alors la permutation donnant l'axe le plus compatible avec les bulletins.
+
+Des algorithmes résolvant ce problème ont déjà été trouvés, avec une complexité polynomiale par rapport à la taille de l'entrée. La bibliothèque \texttt{Sage} utilisée comporte d'ailleurs des outils résolvant directement ce problème en passant par une transformation de la matrice en PQ-Tree. Cependant, quelques erreurs se trouvent dans le programme, et des incohérences ont été repérées.
+
+\begin{Huge}
+	Parler des incohérences (axe en étoile)
+\end{Huge}
+
+\subsubsection{Matrice de dissimilarité}
+L'autre méthode employée est une méthode employant une matrice symbolisant la dissimilarité entre les candidats. La méthode consiste à calculer une matrice donnant de flottants entre 0 et 1, une valeur 0 indiquant que les candidats sont similaires, et 1 qu'ils sont extrêmement différents. Cette matrice est donc une matrice carrée, où chaque ligne et chaque colonne représente un candidat. Le calcul de cette dissimilarité peut se faire de différentes façons. Pour ce projet, 3 grandes fonctions ont été utilisées pour modéliser la dissimilarité entre deux candidats :
+
+\begin{itemize}
+	\item En comptant le nombre de bulletins sur lesquels les deux candidats sont présents, divisé par le nombre de bulletins totaux. Ainsi on a calculé à quel point ils sont similaires, il suffit de retrancher ce résultat à 1, et on obtient le score voulu.
+	
+	\item En comptant le nombre de bulletins sur lesquels les deux candidats sont présents, divisé par le nombre de bulletins où l'un ou l'autre des candidats est présent. De même, il suffit de retrancher ce résultat à 1 pour obtenir la dissimilarité entre les deux candidats.
+	
+	\item En sommant l'inverse du nombre de personnes ayant voté pour chaque bulletin approuvant les deux candidats, divisé par la somme des inverses du nombre de personnes ayant voté pour chaque bulletin approuvant l'un ou l'autre des candidats.
+\end{itemize}
+
+Cette dernière méthode est sensée donner des résultats assez convaincants, car elle tente de prendre en compte le fait que de nombreuses personnes ont voté pour un même sous-ensemble de candidats.
+
+Ensuite, pour obtenir l'axe gauche-droite qui nous intéresse, il faut trouver une permutation sur les lignes et les colonnes (la même permutation sur les lignes et les colonnes), telle que les valeurs des dissimilarités soient croissantes sur les lignes et les colonnes lorsqu'on s'éloigne de la diagonale. Cette permutation donnera alors un axe gauche droite compatible avec les préférences formulées par les votants. On veut donc rendre la matrice \og Anti-Robinson \fg{}.
+
+Cependant, encore une fois, pour pouvoir rendre Anti-Robinson la matrice de dissimilarité calculée, il est nécessaire que les préférences des votants soient unimodales, ou du moins qu'il y ait le moins possible de bulletins incohérents. C'est pourquoi dans les faits, on ne cherche pas à avoir une matrice parfaitement Anti-Robinson. On calcule alors pour chaque permutation des lignes et colonnes un score à cette matrice. Pour chaque ligne et pour chaque colonne, on peut 
+
+
+\subsection{Branch \& Bound}
+
+\section{Logiciel}
+
+\section{Résultats}
 
 \section*{Conclusion}
 \addcontentsline{toc}{section}{Conclusion}

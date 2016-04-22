@@ -1,3 +1,14 @@
 \select@language {french}
-\contentsline {section}{Introduction}{1}
-\contentsline {section}{Conclusion}{2}
+\contentsline {section}{Introduction}{1}{section*.2}
+\contentsline {section}{\numberline {1}Cahier des charges}{1}{section.1}
+\contentsline {subsection}{\numberline {1.1}S\'{e}riation}{1}{subsection.1.1}
+\contentsline {subsection}{\numberline {1.2}Branch \& Bound}{2}{subsection.1.2}
+\contentsline {subsection}{\numberline {1.3}Interface graphique}{3}{subsection.1.3}
+\contentsline {section}{\numberline {2}Analyse et conception}{3}{section.2}
+\contentsline {subsection}{\numberline {2.1}S\'eriation}{3}{subsection.2.1}
+\contentsline {subsubsection}{\numberline {2.1.1}1-Cons\'ecutifs}{3}{subsubsection.2.1.1}
+\contentsline {subsubsection}{\numberline {2.1.2}Matrice de dissimilarit\'e}{4}{subsubsection.2.1.2}
+\contentsline {subsection}{\numberline {2.2}Branch \& Bound}{5}{subsection.2.2}
+\contentsline {section}{\numberline {3}Logiciel}{5}{section.3}
+\contentsline {section}{\numberline {4}R\'esultats}{5}{section.4}
+\contentsline {section}{Conclusion}{5}{section*.3}
