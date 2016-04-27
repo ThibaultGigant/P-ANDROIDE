@@ -6,6 +6,7 @@ sys.path.append(getcwd())
 
 from ui.top_menu import TopMenu
 from ui.upper_frame.upper_frame import UpperFrame
+from ui.lower_frame.lower_interactive import Interactive
 
 
 class MainWindow(Frame):
@@ -52,6 +53,13 @@ class MainWindow(Frame):
             self.lower_frame.destroy()
         self.lower_frame = frame
         self.pack_lower_frame()
+
+    def display_interactive_results(self):
+        """
+        Displays the results of each file, one by one, on a graphic
+        """
+        frame = Interactive(self, [], [], [])
+        self.set_lower_frame(frame)
 
     def set_mode(self, mode):
         self.mode = mode

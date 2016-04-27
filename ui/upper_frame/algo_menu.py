@@ -93,9 +93,9 @@ class AlgoMenu(Frame):
         Launch the algorithm with the files and options the user selected
         """
         if self.algo == 0:
-            pass
+            self.master.master.display_interactive_results()
         else:
-            pass
+            self.master.master.display_interactive_results()
 
     def enable_or_disable(self):
         """
