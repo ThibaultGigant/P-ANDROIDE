@@ -331,7 +331,7 @@ def exemple3():
     bb, best = bandb2(preferences, candidates)
     t2 = time()
     print ("Best solution : " + str(best))
-    #print bb
+    print bb
     print("Duration : " + str(t2-t1))
     print("On explore " + str(len(bb)) + " noeuds parmi " + str(nodes(len(preferences))) + " noeuds.")
 

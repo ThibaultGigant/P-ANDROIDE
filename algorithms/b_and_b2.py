@@ -15,7 +15,6 @@ from sage.graphs.pq_trees import reorder_sets, P, Q
 from compiler.ast import flatten
 
 def bnb(nvar, preferences, candidates, node=([], 0), enum_list=[], best=([], 0), i=0):
-    print("bnb")
     #print("Debut bnb :")
     #print ("Preferences : " + str(preferences))
     #print ("Enum List : " + str(enum_list))
@@ -232,7 +231,18 @@ def is_coherent(ballot, axes):
     :param axis: axis of preference
     :return: True if the ballot is coherent with the axis
     """
-    return any(ballot == Set(axes[i:i + len(ballot)]) for i in range(len(axes) - len(ballot) + 1))
+    sub = Set([])
+    for candidate in ballot:
+        if candidate in axes:
+            sub += Set([candidate])
+    if sub:
+        if len(sub) == len(ballot):
+            coherent = any(ballot == Set(axes[i:i + len(ballot)]) for i in range(len(axes) - len(ballot) + 1))
+        else:
+            coherent = (sub == Set(axes[0:len(sub)]) or sub == Set(axes[len(axes)-len(sub):]))
+    else:
+        coherent = True
+    return coherent
 
 def add_coherent_ballots(node, remaining_prefs, axes):
     """
@@ -307,13 +317,30 @@ def exemple2():
     t2 = time()
     print ("Best solution : " + str(best))
     #print bb
-    print("Duration : " + str(t2-t1))
+    print("Duration`k : " + str(t2-t1))
     print("On explore " + str(len(bb)) + " noeuds parmi " + str(nodes(len(preferences))) + " noeuds.")
 
 def exemple3():
-    preferences = [(1, [1, 2, 3, Set([4, 5, 6, 7, 8])]),
+    preferences = [(10, [2, 7, 8, Set([1, 3, 4, 5, 6])]),
                    (10, [2, 5, 6, Set([1, 3, 4, 7, 8])]),
-                   (10, [2, 7, 8, Set([1, 3, 4, 5, 6])])]
+                   (1, [1, 2, 3, Set([4, 5, 6, 7, 8])])]
+    candidates = [i+1 for i in range(8)]
+    print("Preferences : " + str(preferences))
+    print("Candidats : " + str(candidates))
+    t1 = time()
+    bb, best = bnb(len(preferences),preferences, candidates)
+    t2 = time()
+    print ("Best solution : " + str(best))
+    #print bb
+    print("Duration : " + str(t2-t1))
+    print("On explore " + str(len(bb)) + " noeuds parmi " + str(nodes(len(preferences))) + " noeuds.")
+    for enum in bb:
+        print enum
+
+def exemple4():
+    preferences = [(10, [1, 2, 3, Set([4, 5, 6, 7, 8, 9, 10, 11])]),
+                   (10, [5, 6, 7, Set([1, 2, 3, 4, 8, 9, 10, 11])]),
+                   (1, [9, 10, 11, Set([1, 2, 3, 4, 5, 6, 7, 8])])]
     candidates = [i+1 for i in range(8)]
     print("Preferences : " + str(preferences))
     print("Candidats : " + str(candidates))
@@ -361,4 +388,3 @@ if __name__ == '__main__':
     #exemple_generation()
     #exemple3()
     exemple_file()
-    #print nodes(10)
