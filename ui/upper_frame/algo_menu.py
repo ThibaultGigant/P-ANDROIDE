@@ -48,7 +48,6 @@ class AlgoMenu(Frame):
         radio_interactive.grid(row=1, column=0, columnspan=3, sticky=W)
         radio_benchmark.grid(row=2, column=0, columnspan=3, sticky=W)
 
-        self.mode.trace("w", lambda name, index, mode: self.switch_modes())
         self.frame_mode.pack(side=LEFT,fill=Y, padx=10, pady=(0, 28))
 
         # Variable initialization
@@ -128,10 +127,3 @@ class AlgoMenu(Frame):
             self.launch_btn.destroy()
             self.frame_seriation_parameters()
             self.add_launch_btn()
-
-    def switch_modes(self):
-        """
-        Enables the choice for a dissimilarity function and a weighted calculation if seriation algorithm selected
-        Disables them otherwise
-        """
-        print self.mode.get()
