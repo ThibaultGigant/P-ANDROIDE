@@ -19,11 +19,16 @@ class FilesMenu(LabelFrame):
         label.grid()
         for f in range(len(listFiles)):
             checkbtn = Checkbutton(self, text=listFiles[f], command=lambda name=f: self.add_file(listFiles[name]), padx=10)
-            checkbtn.grid(row=(f % (len(listFiles)/2)), column=(f/(len(listFiles)/2)))
+            checkbtn.grid(row=(f % (len(listFiles)/ 2)), column=(f / (len(listFiles) / 2)))
+        #for f in range(len(listFiles)):
+        #    checkbtn = Checkbutton(self, text=listFiles[f], command=lambda name=f: self.add_file(listFiles[name]), padx=10)
+        #    checkbtn.grid(row=(f % ((len(listFiles) + len(listFrenchFiles))/ 2)), column=(f / ((len(listFiles) + len(listFrenchFiles)) / 2)))
+        #for f in range(len(listFrenchFiles)):
+        #    checkbtn = Checkbutton(self, text=listFrenchFiles[f], command=lambda name=f: self.add_file(listFrenchFiles[name]), padx=10)
+        #    checkbtn.grid(row=(f % ((len(listFiles) + len(listFrenchFiles))/ 2)), column=(f / ((len(listFiles) + len(listFrenchFiles)) / 2)))
 
     def add_file(self, filename):
         """
-
         :param filename:
         :return:
         """
