@@ -20,8 +20,8 @@ def read_pref_approval(count, pref):
     # the number of people having this preference, a strict order of preferences
     # If indifferent between candidates, a Set (from sagemath) of them is added to the list of preferences
 
-    temp = [count, []]
-    #temp = (count, [])
+    #temp = [count, []]
+    temp = (count, [])
     pref = [i.strip() for i in pref.split(",")]
     i = 0
     while i < len(pref):

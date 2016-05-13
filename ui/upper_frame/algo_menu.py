@@ -10,11 +10,13 @@ class AlgoMenu(Frame):
         Frame.__init__(self, master, width=500, height=200)
         self.parent = master
         self.algo = IntVar()
+        self.mode = IntVar()
         self.dissimilarity = IntVar()
         self.weighted = BooleanVar()
         self.dissimilarity.set(2)
         self.weighted.set(True)
         self.frame_algos = None
+        self.frame_mode = None
         self.frame_params = None
         self.launch_btn = None
         self.add_widgets()
@@ -33,6 +35,23 @@ class AlgoMenu(Frame):
         :return:
         """
         # Variable initialization
+        self.frame_mode = LabelFrame(self, text="Choose Mode")
+        self.mode.set(1)
+
+        # Widgets declaration
+        label_mode = Label(self.frame_mode, text="Choose the mode:", font=("", 16))
+        radio_benchmark = Radiobutton(self.frame_mode, text="Benchmark", variable=self.mode, value=0)
+        radio_interactive = Radiobutton(self.frame_mode, text="Interactive", variable=self.mode, value=1)
+
+        # Widgets display
+        label_mode.grid(row=0, column=0, columnspan=3)
+        radio_interactive.grid(row=1, column=0, columnspan=3, sticky=W)
+        radio_benchmark.grid(row=2, column=0, columnspan=3, sticky=W)
+
+        self.mode.trace("w", lambda name, index, mode: self.switch_modes())
+        self.frame_mode.pack(side=LEFT,fill=Y, padx=10, pady=(0, 28))
+
+        # Variable initialization
         self.frame_algos = LabelFrame(self, text="Choose Algorithm")
         self.algo.set(1)
 
@@ -46,8 +65,8 @@ class AlgoMenu(Frame):
         radio_bnb.grid(row=1, column=0, columnspan=3, sticky=W)
         radio_seriation.grid(row=2, column=0, columnspan=3, sticky=W)
 
-        self.algo.trace("w", lambda name, index, mode: self.enable_or_disable())
-        self.frame_algos.pack()
+        self.algo.trace("w", lambda name, index, m: self.enable_or_disable())
+        self.frame_algos.pack(fill=X, padx=10)
 
     def frame_seriation_parameters(self):
         """
@@ -92,8 +111,8 @@ class AlgoMenu(Frame):
         """
         Launch the algorithm with the files and options the user selected
         """
-        if self.algo == 0:
-            self.master.master.display_interactive_results()
+        if self.mode.get() == 0:
+            self.master.master.display_benchmark_results()
         else:
             self.master.master.display_interactive_results()
 
@@ -109,3 +128,10 @@ class AlgoMenu(Frame):
             self.launch_btn.destroy()
             self.frame_seriation_parameters()
             self.add_launch_btn()
+
+    def switch_modes(self):
+        """
+        Enables the choice for a dissimilarity function and a weighted calculation if seriation algorithm selected
+        Disables them otherwise
+        """
+        print self.mode.get()

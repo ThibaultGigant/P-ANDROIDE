@@ -7,6 +7,7 @@ sys.path.append(getcwd())
 from ui.top_menu import TopMenu
 from ui.upper_frame.upper_frame import UpperFrame
 from ui.lower_frame.lower_interactive import Interactive
+from ui.lower_frame.lower_benchmark import Benchmark
 
 
 class MainWindow(Frame):
@@ -59,6 +60,13 @@ class MainWindow(Frame):
         Displays the results of each file, one by one, on a graphic
         """
         frame = Interactive(self, [], [], [])
+        self.set_lower_frame(frame)
+
+    def display_benchmark_results(self):
+        """
+        Displays the results of each file, one by one, on a graphic
+        """
+        frame = Benchmark(self, [], [], [])
         self.set_lower_frame(frame)
 
     def set_mode(self, mode):

@@ -47,7 +47,7 @@ def bnb(nvar, preferences, candidates, node=([], 0), enum_list=[], best=([], 0),
                 if v[1] > best[1]:
                     best = v
 
-            if nodeBoundL >= best[1]:
+            if nodeBoundL > best[1]:
                 enum_list += [nodeL]
                 enum_list, best = bnb(nvar, new_preferences, candidates, nodeL, enum_list, best, i)
 
@@ -69,7 +69,7 @@ def bnb(nvar, preferences, candidates, node=([], 0), enum_list=[], best=([], 0),
             if v[1] > best[1]:
                 best = v
 
-        if nodeBoundR >= best[1]:
+        if nodeBoundR > best[1]:
             enum_list += [nodeR]
             enum_list, best = bnb(nvar, new_preferences, candidates, nodeR, enum_list, best, i)
 
@@ -231,6 +231,15 @@ def is_coherent(ballot, axes):
     :param axis: axis of preference
     :return: True if the ballot is coherent with the axis
     """
+    return any(ballot == Set(axes[i:i + len(ballot)]) for i in range(len(axes) - len(ballot) + 1))
+
+def is_coherent2(ballot, axes):
+    """
+    Determines if a ballot is coherent with a given axis
+    :param ballot: a ballot for candidates
+    :param axis: axis of preference
+    :return: True if the ballot is coherent with the axis
+    """
     sub = Set([])
     for candidate in ballot:
         if candidate in axes:
@@ -317,7 +326,7 @@ def exemple2():
     t2 = time()
     print ("Best solution : " + str(best))
     #print bb
-    print("Duration`k : " + str(t2-t1))
+    print("Duration : " + str(t2-t1))
     print("On explore " + str(len(bb)) + " noeuds parmi " + str(nodes(len(preferences))) + " noeuds.")
 
 def exemple3():
@@ -330,12 +339,16 @@ def exemple3():
     t1 = time()
     bb, best = bnb(len(preferences),preferences, candidates)
     t2 = time()
-    print ("Best solution : " + str(best))
-    #print bb
-    print("Duration : " + str(t2-t1))
-    print("On explore " + str(len(bb)) + " noeuds parmi " + str(nodes(len(preferences))) + " noeuds.")
-    for enum in bb:
-        print enum
+    f = "_resultat.txt"
+    wfile = open(f, 'w')
+    wfile.write("Plus large ensemble cohérent : " + str(best[0][0]) + "\n")
+    wfile.write("Resultat : " + str(best[1]) + "\n")
+    wfile.write("Duration : " + str(t2-t1) + "\n")
+    wfile.write("Axes :\n")
+    axes, card = find_axes2(best[0][0], candidates)
+    for a in axes:
+        wfile.write(str(a)+"\n")
+    wfile.close()
 
 def exemple4():
     preferences = [(10, [1, 2, 3, Set([4, 5, 6, 7, 8, 9, 10, 11])]),
@@ -377,10 +390,18 @@ def exemple_file():
     t1 = time()
     bb, best = bnb(len(preferences), preferences, candidates)
     t2 = time()
-    print ("Best solution : " + str(best))
-    print("Duration : " + str(t2-t1))
-    print("On explore " + str(len(bb)) + " noeuds parmi " + str(nodes(len(preferences))) + " noeuds.")
-    print(find_axes2(best[0][0],  candidates))
+    print("done")
+    f = sys.argv[1].split(".")[0]  + "_resultat.txt"
+    wfile = open(f, 'w')
+    wfile.write("Plus large ensemble cohérent : " + str(best[0][0]) + "\n")
+    wfile.write("Resultat : " + str(best[1]) + "\n")
+    wfile.write("Duration : " + str(t2-t1) + "\n")
+    wfile.write("Axes :\n")
+    axes, card = find_axes2(best[0][0], candidates)
+    if axes:
+        for a in axes:
+            wfile.write(str(a)+"\n")
+    wfile.close()
 
 if __name__ == '__main__':
     #exemple()
