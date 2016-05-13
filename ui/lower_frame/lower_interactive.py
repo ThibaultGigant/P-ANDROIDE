@@ -4,9 +4,11 @@ import sys
 from os import getcwd
 sys.path.append(getcwd())
 
-import matplotlib
-matplotlib.use('TkAgg')
-# from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+from math import sin, sqrt, pi
+
+
+def func(x):
+    return 2*x
 
 
 class Interactive(Frame):
@@ -23,6 +25,8 @@ class Interactive(Frame):
         self.right_image = None
         self.left_arrow = self.make_left_arrow(False)
         self.right_arrow = self.make_right_arrow(True)
+        self.graph = None
+        self.display_current_graph()
         self.pack_elements()
 
     def make_left_arrow(self, active):
@@ -67,6 +71,51 @@ class Interactive(Frame):
     def display_next_result(self, event):
         print event.widget.find_closest(event.x, event.y)
 
+    def display_current_graph(self):
+        self.graph = Graph(0, 20, 0.5, func)
+        self.graph.afficher(5)
+
     def pack_elements(self):
         self.left_arrow.pack(side=LEFT)
+        self.graph.pack()
         self.right_arrow.pack(side=RIGHT)
+
+
+class Graph(Canvas):
+    MAX_WIDTH = 500  # taille maxi choisi pour mon écran
+    MAX_HEIGHT = 400  # idem
+
+    def __init__(self, xmin, xmax, inc, function):
+        Canvas.__init__(self, width=Graph.MAX_WIDTH+20,
+                        height=Graph.MAX_HEIGHT+20)
+        self.xmin = xmin
+        self.xmax = xmax
+
+        self.ymin = self.ymax = function(xmin)
+
+        self.values = []
+
+        t = xmin
+        while t <= xmax:
+            y = function(t)
+            if y > self.ymax:
+                self.ymax = y
+            elif y < self.ymin:
+                self.ymin = y
+            self.values.append((t, y))
+            t += inc
+
+        self.coeffx = Graph.MAX_WIDTH / (xmax - xmin)
+        self.coeffy = Graph.MAX_HEIGHT / (self.ymax - self.ymin)
+
+    def afficher(self, diametre):
+        zerox = 20
+        zeroy = Graph.MAX_HEIGHT/2
+
+        self.create_line(zerox, zeroy, Graph.MAX_WIDTH, zeroy, arrow="last")
+        self.create_line(self.xmin + zerox, zeroy, self.xmin + zerox, zeroy - self.ymax, arrow="last")
+
+        for x, y in self.values:
+            x, y = self.coeffx * x + zerox, self.coeffy * y
+            self.create_oval(x + diametre, zeroy - y + diametre, x + diametre * 2, zeroy - y + diametre * 2)
+
