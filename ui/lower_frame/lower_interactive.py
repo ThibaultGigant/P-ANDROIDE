@@ -4,7 +4,7 @@ import sys
 from os import getcwd
 sys.path.append(getcwd())
 
-from math import sin, sqrt, pi
+from random import randint
 
 
 def func(x):
@@ -72,8 +72,8 @@ class Interactive(Frame):
         print event.widget.find_closest(event.x, event.y)
 
     def display_current_graph(self):
-        self.graph = Graph(0, 20, 0.5, func)
-        self.graph.afficher(5)
+        self.graph = Graph(0, 10, 1, func)
+        self.graph.afficher(10)
 
     def pack_elements(self):
         self.left_arrow.pack(side=LEFT)
@@ -82,12 +82,11 @@ class Interactive(Frame):
 
 
 class Graph(Canvas):
-    MAX_WIDTH = 500  # taille maxi choisi pour mon écran
-    MAX_HEIGHT = 400  # idem
+    MAX_WIDTH = 800  # taille maxi choisi pour mon écran
+    MAX_HEIGHT = 200  # idem
 
     def __init__(self, xmin, xmax, inc, function):
-        Canvas.__init__(self, width=Graph.MAX_WIDTH+20,
-                        height=Graph.MAX_HEIGHT+20)
+        Canvas.__init__(self, width=Graph.MAX_WIDTH+20, height=Graph.MAX_HEIGHT+20)
         self.xmin = xmin
         self.xmax = xmax
 
@@ -105,17 +104,27 @@ class Graph(Canvas):
             self.values.append((t, y))
             t += inc
 
-        self.coeffx = Graph.MAX_WIDTH / (xmax - xmin)
-        self.coeffy = Graph.MAX_HEIGHT / (self.ymax - self.ymin)
+        self.coeffx = (Graph.MAX_WIDTH - 20) / (xmax - xmin)
+        self.coeffy = (Graph.MAX_HEIGHT-20) / (self.ymax - self.ymin)
 
     def afficher(self, diametre):
         zerox = 20
-        zeroy = Graph.MAX_HEIGHT/2
+        zeroy = Graph.MAX_HEIGHT
 
+        # Display axes
         self.create_line(zerox, zeroy, Graph.MAX_WIDTH, zeroy, arrow="last")
-        self.create_line(self.xmin + zerox, zeroy, self.xmin + zerox, zeroy - self.ymax, arrow="last")
+        self.create_line(zerox, zeroy, zerox, zeroy - self.ymax * self.coeffy, arrow="last")
 
+        # Display dots
         for x, y in self.values:
-            x, y = self.coeffx * x + zerox, self.coeffy * y
-            self.create_oval(x + diametre, zeroy - y + diametre, x + diametre * 2, zeroy - y + diametre * 2)
+            x, y = self.coeffx * x + zerox, zeroy - self.coeffy * y
+            self.create_oval(x - diametre/2, y - diametre/2, x + diametre / 2, y + diametre / 2, fill="black")
+            self.create_line(x, zeroy - 5, x, zeroy + 5)
+            self.create_text(x, zeroy + 15, text="Nom du candidat")
+
+        # Display Lines between dots
+        for i in range(1, len(self.values)):
+            x0, y0 = self.coeffx * self.values[i-1][0] + zerox, zeroy - self.coeffy * self.values[i-1][1]
+            x1, y1 = self.coeffx * self.values[i][0] + zerox, zeroy - self.coeffy * self.values[i][1]
+            self.create_line(x0, y0, x1, y1, width=diametre/3)
 
