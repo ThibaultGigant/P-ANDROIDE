@@ -51,6 +51,7 @@ class MainWindow(Frame):
         :param frame: widget that will replace the old one
         """
         if self.lower_frame:
+            self.lower_frame.destroy_elements()
             self.lower_frame.destroy()
         self.lower_frame = frame
         self.pack_lower_frame()
@@ -59,12 +60,12 @@ class MainWindow(Frame):
         """
         Displays the results of each file, one by one, on a graphic
         """
-        frame = Interactive(self, [], [], [])
+        frame = Interactive(self)
         self.set_lower_frame(frame)
 
     def display_benchmark_results(self):
         """
-        Displays the results of each file, one by one, on a graphic
+        Displays the results of all files in a table
         """
         frame = Benchmark(self, [], [], [])
         self.set_lower_frame(frame)

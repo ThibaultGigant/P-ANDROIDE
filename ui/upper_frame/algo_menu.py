@@ -72,6 +72,9 @@ class AlgoMenu(Frame):
         Adds widgets to choose parameters
         :return:
         """
+        if self.frame_params:
+            return
+
         # Variables declaration
         self.frame_params = LabelFrame(self, text="Parameters for Seriation")
 
