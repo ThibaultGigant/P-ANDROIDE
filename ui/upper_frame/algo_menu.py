@@ -85,7 +85,7 @@ class AlgoMenu(Frame):
         radio_and_or = Radiobutton(self.frame_params, text="Both candidates over ballots with one or the other",
                                    variable=self.dissimilarity, value=1)
         radio_over_over = Radiobutton(self.frame_params,
-                                      text="Sum of inverse number of ballots with both candidates over sum of inverse number of ballots with one or the other",
+                                      text="Taking consideration of the ballots size",
                                       variable=self.dissimilarity, value=2)
         label_weighted = Label(self.frame_params, text="Weighted calculation :", font=("", 12))
         radio_weighted = Radiobutton(self.frame_params, text="Weighted", variable=self.weighted, value=True)
@@ -113,10 +113,11 @@ class AlgoMenu(Frame):
         """
         Launch the algorithm with the files and options the user selected
         """
-        if self.mode.get() == 0:
-            self.master.master.display_benchmark_results()
-        else:
-            self.master.master.display_interactive_results()
+        if self.parent.right_frame.list_files:
+            if self.mode.get() == 0:
+                self.master.master.display_benchmark_results()
+            else:
+                self.master.master.display_interactive_results()
 
     def enable_or_disable(self):
         """

@@ -68,7 +68,7 @@ def dissimilarity_and_or(structure, candidate1, candidate2):
 def dissimilarity_over_over(structure, candidate1, candidate2):
     """
     Calculates the dissimilarity between candidate1 and candidate2 like this:
-    1 - sum(1/|ballot_with_candidate1_and_candidate2|)/sum(1/|ballot_with_candidate1_OR_candidate2|)
+    1 - sum(1/|ballot_with_candidate1_and_candidate2| * number_of_ballots_with_candidate1_AND_candidate2)/sum(1/|ballot_with_candidate1_OR_candidate2| * number_of_ballots_with_candidate1_OR_candidate2)
     :param structure: data extracted from an election file
     :param candidate1: ID of a candidate
     :param candidate2: ID of a candidate
@@ -85,10 +85,11 @@ def dissimilarity_over_over(structure, candidate1, candidate2):
     nb_cand1_or_cand2 = 0
     # Calculating number of ballots with the 2 candidates
     for ballot in ballots:
+        n = len(ballot[1]) if type(ballot[1][-1]) == int else len(ballot[1]) - 1  # number of candidates approved in the ballot
         if candidate1 in ballot[1] and candidate2 in ballot[1]:
-            score += 1.0 / ballot[0]
+            score += ballot[0] / float(n)
         if candidate1 in ballot[1] or candidate2 in ballot[1]:
-            nb_cand1_or_cand2 += 1.0 / ballot[0]
+            nb_cand1_or_cand2 += ballot[0] / float(n)
 
     return 1 - score / float(nb_cand1_or_cand2)
 

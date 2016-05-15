@@ -12,10 +12,6 @@ from algorithms.similarity_matrix import dissimilarity_and_n, dissimilarity_and_
 from algorithms.display_axes import filter_symmetric_axes, get_matches
 
 
-def func(x):
-    return 2*x
-
-
 class Interactive(Frame):
     """
     Lower Frame, with the interactive display, showing results for each file
