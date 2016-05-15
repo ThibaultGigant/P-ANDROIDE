@@ -26,8 +26,8 @@ class TopMenu(Menu):
 
     def menu_mode(self):
         menu1 = Menu(self, tearoff=0)
-        menu1.add_command(label="Benchmark", command=lambda: self.parent.set_mode("benchmark"))
-        menu1.add_command(label="Interactive", command=lambda: self.parent.set_mode("interactive"))
+        menu1.add_command(label="Interactive", command=lambda: self.parent.set_mode(1))
+        menu1.add_command(label="Benchmark", command=lambda: self.parent.set_mode(0))
         menu1.add_separator()
         menu1.add_command(label="Close", command=self.parent.quit)
         self.add_cascade(label="Mode", menu=menu1)

@@ -10,6 +10,7 @@ from data_gestion.file_gestion import read_file
 from Data.axesPAndroide import *
 from algorithms.similarity_matrix import dissimilarity_and_n, dissimilarity_and_or, dissimilarity_over_over
 from algorithms.display_axes import filter_symmetric_axes, get_matches
+from algorithms.b_and_b import bnb, find_axes2
 
 
 class Interactive(Frame):
@@ -110,7 +111,13 @@ class Interactive(Frame):
         for f in self.parent.upper_frame.right_frame.list_files:
             structure = read_file(join("Data/all", f), f in listFiles)
             if self.parent.upper_frame.left_frame.algo.get() == 0:
-                pass
+                preferences = structure["preferences"]
+                candidates = structure["candidates"]
+                ensemble, best = bnb(len(preferences), preferences, candidates)
+                axes, card = find_axes2(best[0][0], candidates)
+                axes = filter_symmetric_axes(axes)
+                for axis in axes:
+                    self.results.append((f, axis))
             else:
                 if self.parent.upper_frame.left_frame.dissimilarity.get() == 0:
                     dissimilarity_function = dissimilarity_and_n

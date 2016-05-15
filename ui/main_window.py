@@ -17,7 +17,6 @@ class MainWindow(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
         self.parent = master
-        self.mode = "benchmark"
         self.top_menu = TopMenu(self)
         self.upper_frame = UpperFrame(self)
         self.lower_frame = None
@@ -56,10 +55,6 @@ class MainWindow(Frame):
         self.lower_frame = frame
         self.pack_lower_frame()
 
-    def set_lower_frame_benchmark(self, frame):
-        self.lower_frame = frame
-        self.pack_lower_frame()
-
     def display_interactive_results(self):
         """
         Displays the results of each file, one by one, on a graphic
@@ -71,11 +66,11 @@ class MainWindow(Frame):
         """
         Displays the results of all files in a table
         """
-        frame = Benchmark(self, [], [], [])
-        self.set_lower_frame_benchmark(frame)
+        frame = Benchmark(self)
+        self.set_lower_frame(frame)
 
     def set_mode(self, mode):
-        self.mode = mode
+        self.upper_frame.left_frame.mode.set(mode)
 
 
 def launch():
