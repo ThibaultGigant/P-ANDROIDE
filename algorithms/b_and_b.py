@@ -4,125 +4,105 @@
 
 import sys
 from os import getcwd
+
 sys.path.append(getcwd())
 
 from data_gestion.generation import generation
 from data_gestion.file_gestion import read_file
+from algorithms.display_axes import filter_symmetric_axes
 from copy import copy
 from time import time
 from sage.all import Set
 from sage.graphs.pq_trees import reorder_sets, P, Q
 from compiler.ast import flatten
 
+def bnb(nvar, preferences, candidates, node=([], 0), enum_list=[], best=([], 0), i=0):
+    if preferences:
 
-def bandb2(preferences, candidates, node=[], enum_list=[], best=([], 0)):
-    """
-    Branch and Bound
-    :param preferences: List of ballots : (number of voters, ballot)
-    :param candidates: List of candidates
-    :param node: current node
-    :param enum_list:
-    :return: List of leaves enum_list
-    """
-    new_preferences = copy(preferences)
-    while new_preferences:
-        (nb_voters, ballot) = new_preferences[0]
+        nb_voters, ballot = preferences[0]
+        new_preferences = copy(preferences)
         new_preferences.remove((nb_voters, ballot))
 
-        if not node:
-            tmp_set = []
+        copyNodeSet, copyNodeBound = copy(node)
+
+        nodeSetL = copyNodeSet+[(nb_voters, ballot)]
+        nodeSetR = copyNodeSet
+        i+=1
+
+        axesL, nb_axesL = find_axes(nodeSetL, candidates)
+        if axesL:
+            nodeBoundL = upper_bound(nodeSetL, new_preferences, candidates, axesL)
+            nodeL = (nodeSetL, nodeBoundL)
+
+            if nb_axesL == 2:
+                nodeL = add_coherent_ballots(nodeL, new_preferences, axesL)
+
+            if nb_axesL > 2 and i==nvar:
+                # If more than two axes found, calculate optimal local solution
+                v = sol(nodeL, candidates, new_preferences)
+
+                # If local solution > current optimal solution, replace
+                if v[1] > best[1]:
+                    best = v
+
+            if nodeBoundL > best[1]:
+                enum_list += [nodeL]
+                enum_list, best = bnb(nvar, new_preferences, candidates, nodeL, enum_list, best, i)
+
+        if not nodeSetR:
+            nodeBoundR = sum_nb_voters(nodeSetR, new_preferences)
         else:
-            tmp_set, tmp_bound = copy(node)
+            nodeBoundR = copyNodeBound
+        nodeR = (nodeSetR, nodeBoundR)
 
-        new_node = (tmp_set+[(nb_voters, ballot)], nb_voters)
+        if i==nvar:
+            #If more than two axes found, calculate optimal local solution
+            v = sol(nodeR, candidates, new_preferences)
 
-        # Find compatible axes
-        axes, nb_axes = find_axes2(new_node, candidates)
+            # If local solution > current optimal solution, replace
+            if v[1] > best[1]:
+                best = v
 
-        # If axes exist
-        if axes:
-            if new_preferences:
-                # Calculate node's upper bound
-                #new_bound = upper_bound(new_node, new_preferences, candidates)
-                new_bound = upper_bound_bis(new_node, new_preferences, candidates, axes)
-                new_node = (new_node[0], new_bound)
-
-                # If only one axis was found, add the remaining ballots that are compatible with the axis
-                if nb_axes == 2:
-                    new_node = add_coherent_ballots(new_node, new_preferences, axes)
-
-                if nb_axes > 2:
-                    # If more than two axes found, calculate optimal local solution
-                    v = sol(new_node, candidates, new_preferences, axes)
-
-                    # If local solution > current optimal solution, replace
-                    if v[1] > best[1]:
-                        best = v
-
-                # If node's upper bound > best solution, branch
-                if new_bound >= best[1]:
-                    enum_list += [new_node, (tmp_set, sum_nb_voters(tmp_set, new_preferences))]
-                    bandb2(new_preferences, candidates, new_node, enum_list, best)
+        if nodeBoundR > best[1]:
+            enum_list += [nodeR]
+            enum_list, best = bnb(nvar, new_preferences, candidates, nodeR, enum_list, best, i)
 
     return enum_list, best
 
-def transform_ballots(node):
+
+def transform_ballots(nodeSet):
     """
     Transforms ballots in node to Sets
-    :param node: Current node ([ballot_set], upper_bound)
+    :param nodeSet: Current node ([ballot_set], upper_bound)
     :return: List of ballots as Set
     """
     L = []
-    for nb_voters, ballot in node[0]:
+    for nb_voters, ballot in nodeSet:
         if isinstance(ballot[-1], int):
             L.append(Set(ballot))
         else:
             L.append(Set(ballot[:-1]))
     return L
 
-def upper_bound(node, remaining_prefs, candidates):
+def upper_bound(nodeSet, remaining_prefs, candidates, axes):
     """
     Calculates the node's upper bound
-    :param node: Current node ([ballot_set], upper_bound)
-    :param remaining_prefs: List of remaining ballots in preferances
-    :param candidates: List of candidates
-    :return: int
-    """
-    prefs, bound = node
-    new_bound = 0
-    for pref in prefs:
-        new_bound += pref[0]
-
-    for (nb_voters, ballot) in remaining_prefs:
-        #print("Ballot to add : " + str(ballot))
-        new_ballot_set = prefs + [(nb_voters, ballot)]
-        #print("Ballot set : " + str(ballot_set) + " New ballot set : " + str(new_ballot_set))
-        axes = find_axes2((new_ballot_set, bound), candidates)
-        if axes:
-            #print("Found axis : " + str(axes))
-            new_bound = new_bound + nb_voters
-    return new_bound
-
-def upper_bound_bis(node, remaining_prefs, candidates, axes):
-    """
-    Calculates the node's upper bound
-    :param node: Current node
+    :param nodeSet: Current node set of prefs
     :param remaining_prefs: List of remaining ballots in preferences
     :param candidates: List of candidates
     :param axes: Compatible axes found at node
     :return: int
     """
-    prefs, bound = node
     new_bound = 0
-    for pref in prefs:
+    for pref in nodeSet:
         new_bound += pref[0]
 
-    for nb_voters, prefs in remaining_prefs:
+    for nb_voters, pref in remaining_prefs:
         # Transform preference to set of ballot without indifference
-        if isinstance(prefs[-1], int):
-            ballot = Set(prefs)
+        if isinstance(pref[-1], int):
+            ballot = Set(pref)
         else:
-            ballot = Set(prefs[:-1])
+            ballot = Set(pref[:-1])
         # Determine whether the ballot is coherent with one of the axes
         for axis in axes:
             if is_coherent(ballot, axis):
@@ -131,16 +111,43 @@ def upper_bound_bis(node, remaining_prefs, candidates, axes):
                 break
     return new_bound
 
-def find_axes(node, candidates):
+def sol(node, candidates, remaining_prefs):
+    """
+    Calculates a local optimal solution
+    :param v:
+    :param node: Current node
+    :param candidates: List of candidates
+    :param remaining_prefs: List of remaining ballots in preferances
+    :param axes: Compatible axes found at node
+    :return: Value of local optimal solution
+    """
+    v = 0
+    for (nb_voters, prefs) in node[0]:
+        v += nb_voters
+
+    for (nb_voters, prefs) in remaining_prefs:
+        if isinstance(prefs[-1], int):
+            ballot = Set(prefs)
+        else:
+            ballot = Set(prefs[:-1])
+        axes, nb_axes = find_axes2(node[0], candidates)
+        for axis in axes:
+            if is_coherent(ballot, axis):
+                v += nb_voters
+                node = (node[0] + [(nb_voters, prefs)], node[1])
+                break
+    return (node, v)
+
+def find_axes(nodeSet, candidates):
     """
     Returns all possible coherent axes
-    :param node: Current node ([ballot_set], upper_bound)
+    :param nodeSet: Current node ([ballot_set], upper_bound)
     :param candidates: List of candidates
     :return: List of possible axes, False if none found
     """
     L = []
     candL = []
-    ballots = transform_ballots(node)
+    ballots = transform_ballots(nodeSet)
 
     # Regrouper les bulletins qui contiennent le candidat c
     for c in candidates:
@@ -150,7 +157,7 @@ def find_axes(node, candidates):
                 S += Set([ballot])
         if S:
             S += Set([Set([c])])
-        L += Set([S])
+            L += Set([S])
         candL += Set([S])
     # Transformer liste de Set en PQ-tree et aligner
     axes = P(L)
@@ -170,9 +177,10 @@ def find_axes(node, candidates):
                 #A += [i+1 for i, x in enumerate(L) if x == ballot_set]
                 A += [candL.index(ballot_set)+1]
         all_axes += [A]
-    return all_axes, axes.cardinality()
+    axes_filtered = filter_symmetric_axes(all_axes)
+    return axes_filtered, axes.cardinality()
 
-def find_axes2(node, candidates):
+def find_axes2(nodeSet, candidates):
     """
     Returns all possible coherent axes
     :param node: Current node ([ballot_set], upper_bound)
@@ -181,7 +189,7 @@ def find_axes2(node, candidates):
     """
     L = []
     candL = []
-    ballots = transform_ballots(node)
+    ballots = transform_ballots(nodeSet)
     # Regrouper les bulletins qui contiennent le candidat c
     for c in candidates:
         S = Set([])
@@ -206,7 +214,8 @@ def find_axes2(node, candidates):
             #A += [i+1 for i, x in enumerate(L) if x == ballot_set]
             A += [L.index(ballot_set)+1]
         all_axes += [A]
-    return all_axes, axes.cardinality()
+    axes_filtered = filter_symmetric_axes(all_axes)
+    return axes_filtered, axes.cardinality()
 
 def is_coherent(ballot, axes):
     """
@@ -233,33 +242,6 @@ def add_coherent_ballots(node, remaining_prefs, axes):
         if is_coherent(ballot, axes[0]):
             node = (node[0] + [(nb_voters, prefs)], node[1])
     return node
-
-def sol(node, candidates, remaining_prefs, axes):
-    """
-    Calculates a local optimal solution
-    :param v:
-    :param node: Current node
-    :param candidates: List of candidates
-    :param remaining_prefs: List of remaining ballots in preferances
-    :param axes: Compatible axes found at node
-    :return: Value of local optimal solution
-    """
-    v = 0
-    for (nb_voters, prefs) in node[0]:
-        v += nb_voters
-
-    for (nb_voters, prefs) in remaining_prefs:
-        if isinstance(prefs[-1], int):
-            ballot = Set(prefs)
-        else:
-            ballot = Set(prefs[:-1])
-        axes, nb_axes = find_axes2(node, candidates)
-        for axis in axes:
-            if is_coherent(ballot, axis):
-                v += nb_voters
-                node = (node[0] + [(nb_voters, prefs)], node[1])
-                break
-    return (node, v)
 
 def sum_nb_voters(prefs, remaining_prefs):
     """
@@ -292,7 +274,7 @@ def exemple():
     print("Preferences : " + str(preferences))
     print("Candidats : " + str(candidates))
     t1 = time()
-    bb, best = bandb2(preferences, candidates)
+    bb, best = bnb(preferences, candidates)
     t2 = time()
     print ("Best solution : " + str(best))
     #print bb
@@ -313,7 +295,7 @@ def exemple2():
     print("Preferences : " + str(preferences))
     print("Candidats : " + str(candidates))
     t1 = time()
-    bb, best = bandb2(preferences, candidates)
+    bb, best = bnb(len(preferences), preferences, candidates)
     t2 = time()
     print ("Best solution : " + str(best))
     #print bb
@@ -321,19 +303,25 @@ def exemple2():
     print("On explore " + str(len(bb)) + " noeuds parmi " + str(nodes(len(preferences))) + " noeuds.")
 
 def exemple3():
-    preferences = [(1, [1, 2, 3, Set([4, 5, 6, 7, 8])]),
+    preferences = [(10, [2, 7, 8, Set([1, 3, 4, 5, 6])]),
                    (10, [2, 5, 6, Set([1, 3, 4, 7, 8])]),
-                   (10, [2, 7, 8, Set([1, 3, 4, 5, 6])])]
+                   (1, [1, 2, 3, Set([4, 5, 6, 7, 8])])]
     candidates = [i+1 for i in range(8)]
     print("Preferences : " + str(preferences))
     print("Candidats : " + str(candidates))
     t1 = time()
-    bb, best = bandb2(preferences, candidates)
+    bb, best = bnb(len(preferences),preferences, candidates)
     t2 = time()
-    print ("Best solution : " + str(best))
-    print bb
-    print("Duration : " + str(t2-t1))
-    print("On explore " + str(len(bb)) + " noeuds parmi " + str(nodes(len(preferences))) + " noeuds.")
+    f = "_resultat.txt"
+    wfile = open(f, 'w')
+    wfile.write("Plus large ensemble cohérent : " + str(best[0][0]) + "\n")
+    wfile.write("Resultat : " + str(best[1]) + "\n")
+    wfile.write("Duration : " + str(t2-t1) + "\n")
+    wfile.write("Axes :\n")
+    axes, card = find_axes2(best[0][0], candidates)
+    for a in axes:
+        wfile.write(str(a)+"\n")
+    wfile.close()
 
 def exemple_generation():
     structures, candidates = generation(8, 10)
@@ -342,7 +330,7 @@ def exemple_generation():
     print("Preferences : " + str(preferences))
     print("Candidats : " + str(candidates))
     t1 = time()
-    bb, best = bandb2(preferences, candidates)
+    bb, best = bnb(len(preferences), preferences, candidates)
     t2 = time()
     print ("Best solution : " + str(best))
     #print bb
@@ -356,16 +344,24 @@ def exemple_file():
     print("Preferences : " + str(preferences))
     print("Candidats : " + str(candidates))
     t1 = time()
-    bb, best = bandb2(preferences, candidates)
+    bb, best = bnb(len(preferences), preferences, candidates)
     t2 = time()
-    print ("Best solution : " + str(best))
-    #print bb
-    print("Duration : " + str(t2-t1))
-    print("On explore " + str(len(bb)) + " noeuds parmi " + str(nodes(len(preferences))) + " noeuds.")
+    print("done")
+    f = sys.argv[1].split(".")[0]  + "_resultat.txt"
+    wfile = open(f, 'w')
+    wfile.write("Plus large ensemble cohérent : " + str(best[0][0]) + "\n")
+    wfile.write("Resultat : " + str(best[1]) + "\n")
+    wfile.write("Duration : " + str(t2-t1) + "\n")
+    wfile.write("Axes :\n")
+    axes, card = find_axes2(best[0][0], candidates)
+    if axes:
+        for a in axes:
+            wfile.write(str(a)+"\n")
+    wfile.close()
 
 if __name__ == '__main__':
     #exemple()
-    exemple3()
+    #exemple2()
     #exemple_generation()
+    exemple3()
     #exemple_file()
-    #print nodes(10)
