@@ -109,6 +109,9 @@ def calculate_seriation(self, file, vrow, dissimilarity, weighted):
     structure = read_file("Data/all/" + str(file), file in listFiles)
     Label(self, text=str(structure["nb_voters"])).grid(row=vrow, column=3)
     Label(self, text=str(structure["nb_unique_orders"])).grid(row=vrow, column=5)
-    t, axes = find_axis_from_structure(structure, dissimilarity, weighted)
+    if file in listFiles:
+        t, axes = find_axis_from_structure(structure, dissimilarity, weighted)
+    else:
+        t, axes = find_axis_from_structure(structure, dissimilarity, weighted, unwanted_candidates=[2, 3, 7, 11])
     Label(self, text=str(len(axes[1]))).grid(row=vrow, column=7)
     Label(self, text=str(t)).grid(row=vrow, column=9)
