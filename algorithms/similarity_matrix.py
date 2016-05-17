@@ -34,7 +34,7 @@ def dissimilarity_and_n(structure, candidate1, candidate2):
         if candidate1 in ballot[1] and candidate2 in ballot[1]:
             score += ballot[0]
 
-    return 1 - score / vote_count
+    return 1 - float(score) / vote_count
 
 
 def dissimilarity_and_or(structure, candidate1, candidate2):

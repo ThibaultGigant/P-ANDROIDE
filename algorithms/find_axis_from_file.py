@@ -91,11 +91,9 @@ def write_directory_results_on_file(input_directory, output_file, dissimilarity_
     fp = open(output_file, "w")
 
     structure = read_directory(input_directory, strict)
-    if unwanted_candidates:
-        structure = remove_unwanted_candidates(structure, unwanted_candidates)
 
     fp.write(str(input_directory) + "\n")
-    t, optimal_permutations = find_axis_from_structure(structure, dissimilarity_function, weighted)
+    t, optimal_permutations = find_axis_from_structure(structure, dissimilarity_function, weighted, unwanted_candidates)
     print(t)
     fp.write("calculation time: " + str(t) + " seconds\n")
     fp.write("axes: " + str(optimal_permutations) + "\n")
