@@ -15,6 +15,7 @@ class AlgoMenu(Frame):
         self.weighted = BooleanVar()
         self.dissimilarity.set(2)
         self.weighted.set(True)
+        self.filtered = False
         self.frame_algos = None
         self.frame_mode = None
         self.frame_params = None
@@ -102,6 +103,27 @@ class AlgoMenu(Frame):
 
         self.frame_params.pack(padx=10)
 
+    def frame_bnb_parameters(self):
+        """
+        Adds widgets to choose parameters
+        :return:
+        """
+        if self.frame_params:
+            return
+
+        # Variables declaration
+        self.frame_params = LabelFrame(self, text="Parameters for Branch & Bound")
+
+        # Widgets declaration
+        label_filtered = Label(self.frame_params, text="", font=("", 14))
+        checkbtn = Checkbutton(self, text="Remove last ballots", command=self.filter_ballots, padx=10)
+
+        # Widgets display
+        label_filtered.grid(row=0, column=0, columnspan=3, padx=10)
+        checkbtn.grid(row=1, column=0, columnspan=3, sticky=W, padx=10)
+
+        self.frame_params.pack(padx=10)
+
     def add_launch_btn(self):
         """
         Adds a button to launch the choosed algorithm with right parameters
@@ -118,6 +140,9 @@ class AlgoMenu(Frame):
                 self.master.master.display_benchmark_results()
             else:
                 self.master.master.display_interactive_results()
+
+    def filter_ballots(self):
+        self.filtered = True
 
     def enable_or_disable(self):
         """

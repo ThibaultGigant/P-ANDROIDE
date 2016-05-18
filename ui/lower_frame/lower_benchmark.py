@@ -4,7 +4,7 @@ import ttk
 import sys
 from os import getcwd
 
-from algorithms.b_and_b import bnb, find_axes2
+from algorithms.b_and_b import bnb, find_axes2, remove_last_ballots
 
 sys.path.append(getcwd())
 
@@ -25,6 +25,7 @@ class Benchmark(Frame):
         algo = self.parent.upper_frame.left_frame.algo.get()
         weighted = self.parent.upper_frame.left_frame.weighted.get()
         dissimilarity_var = self.parent.upper_frame.left_frame.dissimilarity.get()
+        filtered = self.parent.upper_frame.left_frame.filtered.get()
 
         if dissimilarity_var == 0:
             dissimilarity = dissimilarity_and_n
@@ -48,10 +49,10 @@ class Benchmark(Frame):
         ttk.Separator(self, orient=VERTICAL).grid(row=0, column=6, rowspan=len(self.files) * 2 + 3, padx=10,
                                                   sticky="ns")
         if algo == 0:
-            Label(self, text="Bulletins (uniques) sélectionnés").grid(row=1, column=7)
+            Label(self, text="Bulletins sélectionnés").grid(row=1, column=7)
             ttk.Separator(self, orient=VERTICAL).grid(row=0, column=8, rowspan=len(self.files) * 2 + 3, padx=10,
                                                       sticky="ns")
-            Label(self, text="Bulletins sélectionnés").grid(row=1, column=9)
+            Label(self, text="Bulletins (uniques) sélectionnés").grid(row=1, column=9)
             ttk.Separator(self, orient=VERTICAL).grid(row=0, column=10, rowspan=len(self.files) * 2 + 3, padx=10,
                                                       sticky="ns")
             Label(self, text="Proportion").grid(row=1, column=11)
@@ -78,7 +79,7 @@ class Benchmark(Frame):
             Label(self, text=f).grid(row=vrow, column=1)
             ttk.Separator(self, orient=HORIZONTAL).grid(row=vrow + 1, columnspan=16, sticky="ew")
             if algo == 0:
-                calculate_bnb(self, f, vrow, dissimilarity, weighted)
+                calculate_bnb(self, f, vrow, filtered)
             else:
                 calculate_seriation(self, f, vrow, dissimilarity, weighted)
             vrow += 2
@@ -87,18 +88,29 @@ class Benchmark(Frame):
         return
 
 
-def calculate_bnb(self, file, vrow, dissimilarity, weighted):
+def calculate_bnb(self, file, vrow, filtered):
     structure = read_file("Data/all/" + str(file), file in listFiles)
-    preferences = structure["preferences"]
-    candidates = structure["candidates"]
-    Label(self, text=str(structure["nb_voters"])).grid(row=vrow, column=3)
-    Label(self, text=str(structure["nb_unique_orders"])).grid(row=vrow, column=5)
+    if not filtered:
+        preferences = structure["preferences"]
+        candidates = structure["candidates"]
+        Label(self, text=str(structure["nb_voters"])).grid(row=vrow, column=3)
+        Label(self, text=str(structure["nb_unique_orders"])).grid(row=vrow, column=5)
+    else:
+        preferences_bis = structure["preferences"]
+        preferences, nb_voters, nb_unique = remove_last_ballots(preferences_bis)
+        candidates = structure["candidates"]
+        Label(self, text=str(nb_voters)).grid(row=vrow, column=3)
+        Label(self, text=str(nb_unique)).grid(row=vrow, column=5)
+
     t1 = time()
     ensemble, best = bnb(len(preferences), preferences, candidates)
     t2 = time()
-    Label(self, text=str(len(best[0][0]))).grid(row=vrow, column=7)
-    Label(self, text=str(best[1])).grid(row=vrow, column=9)
-    Label(self, text=str(best[1] * 100.0 / structure["nb_voters"])).grid(row=vrow, column=11)
+    Label(self, text=str(best[1])).grid(row=vrow, column=7)
+    Label(self, text=str(len(best[0][0]))).grid(row=vrow, column=9)
+    if not filtered:
+        Label(self, text=str(best[1] * 100.0 / structure["nb_voters"])).grid(row=vrow, column=11)
+    else:
+        Label(self, text=str(best[1] * 100.0 / nb_voters)).grid(row=vrow, column=11)
     axes, card = find_axes2(best[0][0], candidates)
 
     Label(self, text=str(len(axes))).grid(row=vrow, column=13)

@@ -8,7 +8,7 @@ from os import getcwd
 sys.path.append(getcwd())
 
 from data_gestion.generation import generation
-from data_gestion.file_gestion import read_file
+from data_gestion.file_gestion import read_file, read_directory
 from algorithms.display_axes import filter_symmetric_axes
 from copy import copy
 from time import time
@@ -18,7 +18,6 @@ from compiler.ast import flatten
 
 def bnb(nvar, preferences, candidates, node=([], 0), enum_list=[], best=([], 0), i=0):
     if preferences:
-
         nb_voters, ballot = preferences[0]
         new_preferences = copy(preferences)
         new_preferences.remove((nb_voters, ballot))
@@ -34,10 +33,10 @@ def bnb(nvar, preferences, candidates, node=([], 0), enum_list=[], best=([], 0),
             nodeBoundL = upper_bound(nodeSetL, new_preferences, candidates, axesL)
             nodeL = (nodeSetL, nodeBoundL)
 
-            if nb_axesL == 2:
-                nodeL = add_coherent_ballots(nodeL, new_preferences, axesL)
+            #if nb_axesL == 2:
+                #nodeL = add_coherent_ballots(nodeL, new_preferences, axesL)
 
-            if nb_axesL > 2 and i==nvar:
+            if i==nvar:
                 # If more than two axes found, calculate optimal local solution
                 v = sol(nodeL, candidates, new_preferences)
 
@@ -68,7 +67,6 @@ def bnb(nvar, preferences, candidates, node=([], 0), enum_list=[], best=([], 0),
             enum_list, best = bnb(nvar, new_preferences, candidates, nodeR, enum_list, best, i)
 
     return enum_list, best
-
 
 def transform_ballots(nodeSet):
     """
@@ -263,64 +261,40 @@ def nodes(n):
         t_nodes += 2**(i+1)
     return t_nodes
 
-def exemple():
-    preferences = [(4, [3, 1, 2, Set([4, 5, 6, 7, 8, 9])]),
-                   (3, [1, 7, 2, Set([3, 4, 5, 6, 8, 9])]),
-                   (3, [5, 7, Set([1, 2, 3, 4, 6, 8, 9])]),
-                   (2, [2, 7, 5, Set([1, 3, 4, 6, 8, 9])]),
-                   (1, [8, 7, 1, Set([2, 3, 4, 5, 6, 9])]),
-                   (1, [9, 2, 3, Set([1, 4, 5, 6, 7, 8])])]
-    candidates = [i+1 for i in range(9)]
-    print("Preferences : " + str(preferences))
-    print("Candidats : " + str(candidates))
-    t1 = time()
-    bb, best = bnb(preferences, candidates)
-    t2 = time()
-    print ("Best solution : " + str(best))
-    #print bb
-    print("Duration : " + str(t2-t1))
-    print("On explore " + str(len(bb)) + " noeuds parmi " + str(nodes(len(preferences))) + " noeuds.")
+def remove_last_ballots(preferences):
+    filtered = []
+    unique = 0
+    total = 0
+    for nb_voters, ballot in preferences:
+        if nb_voters>1:
+            filtered += [(nb_voters, ballot)]
+            total += nb_voters
+            unique += 1
+    return filtered, total, unique
 
-def exemple2():
-    preferences = [(4, [3, 9, 2, Set([1, 4, 5, 6, 7, 8])]),
-                   (4, [1, 8, Set([2, 3, 4, 5, 6, 7, 9])]),
-                   (3, [3, 5, 7, Set([1, 2, 4, 6, 8, 9])]),
-                   (2, [7, 5, Set([1, 2, 3, 4, 6, 8, 9])]),
-                   (2, [9, 7, 2, Set([1, 3, 4, 5, 6, 8])]),
-                   (2, [9, 7, 6, Set([1, 2, 3, 4, 5, 8])]),
-                   (1, [9, 4, 6, Set([1, 2, 3, 5, 7, 8])]),
-                   (1, [1, 7, 8, Set([2, 3, 4, 5, 6, 9])]),
-                   (1, [9, 2, Set([1, 3, 4, 5, 6, 7, 8])])]
-    candidates = [i+1 for i in range(9)]
+def exemple():
+    preferences = [(9, [1, 2, 3, Set([4,5,6])]),
+                   (5, [Set([1,2,3,4,5])]),
+                   (2, [2, 3, Set([1,4,5,6])])]
+    candidates = [i+1 for i in range(6)]
     print("Preferences : " + str(preferences))
     print("Candidats : " + str(candidates))
     t1 = time()
     bb, best = bnb(len(preferences), preferences, candidates)
     t2 = time()
-    print ("Best solution : " + str(best))
-    #print bb
-    print("Duration : " + str(t2-t1))
-    print("On explore " + str(len(bb)) + " noeuds parmi " + str(nodes(len(preferences))) + " noeuds.")
-
-def exemple3():
-    preferences = [(10, [2, 7, 8, Set([1, 3, 4, 5, 6])]),
-                   (10, [2, 5, 6, Set([1, 3, 4, 7, 8])]),
-                   (1, [1, 2, 3, Set([4, 5, 6, 7, 8])])]
-    candidates = [i+1 for i in range(8)]
-    print("Preferences : " + str(preferences))
-    print("Candidats : " + str(candidates))
-    t1 = time()
-    bb, best = bnb(len(preferences),preferences, candidates)
-    t2 = time()
-    f = "_resultat.txt"
+    print("done")
+    f = "resultat.txt"
     wfile = open(f, 'w')
-    wfile.write("Plus large ensemble cohérent : " + str(best[0][0]) + "\n")
+    wfile.write("Plus large ensemble cohérent : ")
+    for bull in best[0][0]:
+        wfile.write(str(bull) + "\n")
     wfile.write("Resultat : " + str(best[1]) + "\n")
     wfile.write("Duration : " + str(t2-t1) + "\n")
     wfile.write("Axes :\n")
     axes, card = find_axes2(best[0][0], candidates)
-    for a in axes:
-        wfile.write(str(a)+"\n")
+    if axes:
+        for a in axes:
+            wfile.write(str(a)+"\n")
     wfile.close()
 
 def exemple_generation():
@@ -349,7 +323,58 @@ def exemple_file():
     print("done")
     f = sys.argv[1].split(".")[0]  + "_resultat.txt"
     wfile = open(f, 'w')
-    wfile.write("Plus large ensemble cohérent : " + str(best[0][0]) + "\n")
+    wfile.write("Plus large ensemble cohérent : ")
+    for bull in best[0][0]:
+        wfile.write(str(bull) + "\n")
+    wfile.write("Resultat : " + str(best[1]) + "\n")
+    wfile.write("Duration : " + str(t2-t1) + "\n")
+    wfile.write("Axes :\n")
+    axes, card = find_axes2(best[0][0], candidates)
+    if axes:
+        for a in axes:
+            wfile.write(str(a)+"\n")
+    wfile.close()
+
+def exemple_all_files():
+    structure = read_directory(sys.argv[1])
+    preferences = structure["preferences"]
+    candidates = [i+1 for i in range(len(structure["candidates"]))]
+    print("Preferences : " + str(preferences))
+    print("Candidats : " + str(candidates))
+    t1 = time()
+    bb, best = bnb(len(preferences), preferences, candidates)
+    t2 = time()
+    print("done")
+    f = sys.argv[1].split(".")[0]  + "_resultat.txt"
+    wfile = open(f, 'w')
+    wfile.write("Plus large ensemble cohérent : ")
+    for bull in best[0][0]:
+        wfile.write(str(bull) + "\n")
+    wfile.write("Resultat : " + str(best[1]) + "\n")
+    wfile.write("Duration : " + str(t2-t1) + "\n")
+    wfile.write("Axes :\n")
+    axes, card = find_axes2(best[0][0], candidates)
+    if axes:
+        for a in axes:
+            wfile.write(str(a)+"\n")
+    wfile.close()
+
+def exemple_filtered():
+    structure = read_file(sys.argv[1])
+    preferences_bis = structure["preferences"]
+    preferences, nb_voters, uniq = remove_last_ballots(preferences_bis)
+    candidates = [i+1 for i in range(len(structure["candidates"]))]
+    print("Preferences : " + str(preferences))
+    print("Candidats : " + str(candidates))
+    t1 = time()
+    bb, best = bnb(len(preferences), preferences, candidates)
+    t2 = time()
+    print("done")
+    f = sys.argv[1].split(".")[0]  + "_resultat.txt"
+    wfile = open(f, 'w')
+    wfile.write("Plus large ensemble cohérent : ")
+    for bull in best[0][0]:
+        wfile.write(str(bull) + "\n")
     wfile.write("Resultat : " + str(best[1]) + "\n")
     wfile.write("Duration : " + str(t2-t1) + "\n")
     wfile.write("Axes :\n")
@@ -361,7 +386,6 @@ def exemple_file():
 
 if __name__ == '__main__':
     #exemple()
-    #exemple2()
-    #exemple_generation()
-    exemple3()
     #exemple_file()
+    #exemple_all_files()
+    exemple_filtered()
