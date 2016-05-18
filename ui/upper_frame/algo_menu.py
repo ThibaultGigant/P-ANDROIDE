@@ -15,7 +15,7 @@ class AlgoMenu(Frame):
         self.weighted = BooleanVar()
         self.dissimilarity.set(2)
         self.weighted.set(True)
-        self.filtered = False
+        self.filtered = BooleanVar()
         self.frame_algos = None
         self.frame_mode = None
         self.frame_params = None
@@ -74,7 +74,7 @@ class AlgoMenu(Frame):
         :return:
         """
         if self.frame_params:
-            return
+            self.frame_params.destroy()
 
         # Variables declaration
         self.frame_params = LabelFrame(self, text="Parameters for Seriation")
@@ -109,17 +109,18 @@ class AlgoMenu(Frame):
         :return:
         """
         if self.frame_params:
-            return
+            self.frame_params.destroy()
 
         # Variables declaration
         self.frame_params = LabelFrame(self, text="Parameters for Branch & Bound")
 
         # Widgets declaration
-        label_filtered = Label(self.frame_params, text="", font=("", 14))
-        checkbtn = Checkbutton(self, text="Remove last ballots", command=self.filter_ballots, padx=10)
+        # label_filtered = Label(self.frame_params, text="", font=("", 14))
+        checkbtn = Checkbutton(self.frame_params, text="Remove last ballots",
+                               variable=self.filtered, onvalue=True, offvalue=False, padx=10)
 
         # Widgets display
-        label_filtered.grid(row=0, column=0, columnspan=3, padx=10)
+        # label_filtered.grid(row=0, column=0, columnspan=3, padx=10)
         checkbtn.grid(row=1, column=0, columnspan=3, sticky=W, padx=10)
 
         self.frame_params.pack(padx=10)
@@ -141,17 +142,16 @@ class AlgoMenu(Frame):
             else:
                 self.master.master.display_interactive_results()
 
-    def filter_ballots(self):
-        self.filtered = True
-
     def enable_or_disable(self):
         """
         Enables the choice for a dissimilarity function and a weighted calculation if seriation algorithm selected
         Disables them otherwise
         """
         if self.algo.get() == 0:
-            self.frame_params.destroy()
-            self.frame_params = None
+            self.launch_btn.destroy()
+            self.frame_bnb_parameters()
+            self.add_launch_btn()
+
         else:
             self.launch_btn.destroy()
             self.frame_seriation_parameters()
