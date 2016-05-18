@@ -123,7 +123,7 @@ class AlgoMenu(Frame):
         # label_filtered.grid(row=0, column=0, columnspan=3, padx=10)
         checkbtn.grid(row=1, column=0, columnspan=3, sticky=W, padx=10)
 
-        self.frame_params.pack(padx=10)
+        self.frame_params.pack(fill=X, padx=10)
 
     def add_launch_btn(self):
         """

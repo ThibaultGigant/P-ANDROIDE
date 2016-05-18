@@ -275,7 +275,7 @@ def launch_french_fusion():
 
 def launch_french_bnb():
     s = axes_to_latex_graph_bnb(sys.argv[1], listFrenchAxes[0], name=str(sys.argv[1]))
-    fp = open("Data/TeX/"+str(sys.argv[1]),"w")
+    fp = open("results","w")
     fp.write(s)
     fp.close()
 
