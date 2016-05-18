@@ -9,12 +9,27 @@ sys.path.append(getcwd())
 
 from data_gestion.generation import generation
 from data_gestion.file_gestion import read_file, read_directory
-from algorithms.display_axes import filter_symmetric_axes
 from copy import copy
 from time import time
 from sage.all import Set
 from sage.graphs.pq_trees import reorder_sets, P, Q
 from compiler.ast import flatten
+
+
+def filter_symmetric_axes(permutations):
+    """
+    Filter the list of permutations to keep only one axis when 2 are symmetric
+    :param permutations: list of permutations found
+    :type permutations: list[list[int]]
+    :return: the filtered list of permutations
+    :rtype: list[list[int]]
+    """
+    filtered_permutations = []
+    for permutation in permutations:
+        if list(reversed(permutation)) not in filtered_permutations:
+            filtered_permutations.append(permutation)
+    return filtered_permutations
+
 
 def bnb(nvar, preferences, candidates, node=([], 0), enum_list=[], best=([], 0), i=0):
     if preferences:

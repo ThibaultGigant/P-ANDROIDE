@@ -8,7 +8,7 @@ from Data.axesPAndroide import *
 from data_gestion.file_gestion import read_file, read_directory
 from find_axis_from_file import find_axis_from_structure
 from algorithms.b_and_b import bnb, find_axes2
-from similarity_matrix import *
+from algorithms.similarity_matrix import *
 
 
 def get_matches(axis):
