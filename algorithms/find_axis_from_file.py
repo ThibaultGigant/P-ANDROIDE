@@ -33,13 +33,14 @@ def find_axis_from_structure(structure, dissimilarity_function=dissimilarity_ove
             conversion_table[i] = candidate
             i += 1
 
-    t = time()
+
     similarity_matrix = create_similarity_matrix(structure, dissimilarity_function)
 
     candidates_set = Set(range(1, len(conversion_table)+1))
     candidates = [i-1 for i in conversion_table.values()]
     candidates.sort()
 
+    t = time()
     optimal_permutations = find_permutation_dynamic_programming(similarity_matrix.matrix_from_rows_and_columns(candidates, candidates),
                                                                 candidates_set, {}, weighted)
 

@@ -4,7 +4,7 @@ from os import getcwd
 sys.path.append(getcwd())
 
 from Data.axesPAndroide import *
-from data_gestion.file_gestion import read_file
+from data_gestion.file_gestion import read_file, read_directory
 from find_axis_from_file import find_axis_from_structure
 from similarity_matrix import *
 
@@ -38,20 +38,19 @@ def filter_symmetric_axes(permutations):
     return filtered_permutations
 
 
-def axes_to_latex_graph(filename, axis, name=None,
-                        dissimilarity_function=dissimilarity_over_over, weighted=False, strict=False,
+def axes_to_latex_graph(structure, axis, name=None,
+                        dissimilarity_function=dissimilarity_over_over, weighted=False,
                         unwanted_candidates=[]):
     """
     Returns the LaTeX code to display the axis
-    :param filename: relative path to the election data file
+    :param structure: structure extracted from a file or directory
     :param axis: axis corresponding to the file, according to wikipedia
     :param name: name that will be given to the figures
     :param dissimilarity_function: function to use to calculate dissimilarity between 2 candidates
     :param weighted: if True, matrices scores are calculated with the weighted gradient
-    :param strict: True if the file depicts strict preferences, False otherwise
+    :param unwanted_candidates: list of candidates to exclude from the search
     :return: string containing the LaTeX code
     """
-    structure = read_file(filename, strict)
     t, permutations = find_axis_from_structure(structure, dissimilarity_function, weighted, unwanted_candidates)
     permutations = filter_symmetric_axes(permutations[1])
     matches = get_matches(axis)
@@ -100,6 +99,7 @@ def all_files_to_latex(directory, files_list, axes_list, names_list,
     :param dissimilarity_function: function to use to calculate dissimilarity between 2 candidates
     :param weighted: if True, matrices scores are calculated with the weighted gradient
     :param strict: list of booleans, True if the corresponding file in the list is depicting strict preferences
+    :param unwanted_candidates: list of candidates to exclude from the search
     :return: LaTeX code to display the graphs corresponding to all the files
     """
     if not strict:
@@ -107,8 +107,9 @@ def all_files_to_latex(directory, files_list, axes_list, names_list,
     res = ""
     for i in range(len(files_list)):
         print(files_list[i])
-        res += axes_to_latex_graph(join(directory, files_list[i]), axes_list[i], names_list[i],
-                                   dissimilarity_function, weighted, strict[i], unwanted_candidates)
+        structure = read_file(join(directory, files_list[i]), strict[i])
+        res += axes_to_latex_graph(structure, axes_list[i], names_list[i],
+                                   dissimilarity_function, weighted, unwanted_candidates)
     return res
 
 
@@ -202,6 +203,23 @@ def launch_french():
     fp.close()
 
 
+def launch_french_fusion():
+    structure = read_directory("Data/frenchapproval")
+    functions = [dissimilarity_and_n, dissimilarity_and_or, dissimilarity_over_over]
+    names = ["dissimilarity\_and\_n weighted", "dissimilarity\_and\_n not weighted",
+             "dissimilarity\_and\_or weighted", "dissimilarity\_and\_or not weighted",
+             "dissimilarity\_over\_over weighted", "dissimilarity\_over\_over not weighted"]
+    s = ""
+    for i in range(6):
+        print "Iteration " + str(i)
+        s += axes_to_latex_graph(structure, listFrenchAxes[0], names[i], functions[i/2], i % 2 == 0,
+                                 unwanted_candidates=[2, 3, 7, 11])
+    fp = open("Data/TeX/french_fusion.tex", "w")
+    fp.write(s)
+    fp.close()
+
+
 if __name__ == '__main__':
-    launch_irish_glasgow()
+    # launch_irish_glasgow()
     # launch_french()
+    launch_french_fusion()

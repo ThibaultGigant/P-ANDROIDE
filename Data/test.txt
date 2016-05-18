@@ -1,5 +1,0 @@
-Data/frenchapproval/
-calculation time: 74.7313041687 seconds
-axes: (59, [[1, 4, 5, 3, 10, 2, 9, 7, 6, 11, 12, 8], [8, 12, 11, 6, 7, 9, 2, 10, 3, 5, 4, 1]])
-['Megret', 'LePen', 'Saint-Josse', 'Chirac', 'Madelin', 'Bayrou', 'Chevenement', 'Jospin', 'Mamere', 'Laguiller', 'Besancenot', 'Hue']
-['Hue', 'Besancenot', 'Laguiller', 'Mamere', 'Jospin', 'Chevenement', 'Bayrou', 'Madelin', 'Chirac', 'Saint-Josse', 'LePen', 'Megret']
