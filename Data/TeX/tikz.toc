@@ -1,7 +1,0 @@
-\select@language {french}
-\contentsline {section}{\numberline {1}dissimilarity\_and\_n weighted}{1}{section.1}
-\contentsline {section}{\numberline {2}dissimilarity\_and\_n not weighted}{3}{section.2}
-\contentsline {section}{\numberline {3}dissimilarity\_and\_or weighted}{5}{section.3}
-\contentsline {section}{\numberline {4}dissimilarity\_and\_or not weighted}{7}{section.4}
-\contentsline {section}{\numberline {5}dissimilarity\_over\_over weighted}{12}{section.5}
-\contentsline {section}{\numberline {6}dissimilarity\_over\_over not weighted}{14}{section.6}
