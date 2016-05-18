@@ -28,22 +28,22 @@ def bnb(nvar, preferences, candidates, node=([], 0), enum_list=[], best=([], 0),
         nodeSetR = copyNodeSet
         i+=1
 
+        #Find axes, number of axes
         axesL, nb_axesL = find_axes(nodeSetL, candidates)
         if axesL:
             nodeBoundL = upper_bound(nodeSetL, new_preferences, candidates, axesL)
             nodeL = (nodeSetL, nodeBoundL)
 
-            #if nb_axesL == 2:
-                #nodeL = add_coherent_ballots(nodeL, new_preferences, axesL)
-
+            # If at leaf node
             if i==nvar:
-                # If more than two axes found, calculate optimal local solution
+                # Calculate optimal local solution
                 v = sol(nodeL, candidates, new_preferences)
 
                 # If local solution > current optimal solution, replace
                 if v[1] > best[1]:
                     best = v
 
+            #If upper bound > current optimal solution, continue branching
             if nodeBoundL > best[1]:
                 enum_list += [nodeL]
                 enum_list, best = bnb(nvar, new_preferences, candidates, nodeL, enum_list, best, i)
@@ -54,14 +54,15 @@ def bnb(nvar, preferences, candidates, node=([], 0), enum_list=[], best=([], 0),
             nodeBoundR = copyNodeBound
         nodeR = (nodeSetR, nodeBoundR)
 
+        #If at node leaf
         if i==nvar:
-            #If more than two axes found, calculate optimal local solution
             v = sol(nodeR, candidates, new_preferences)
 
             # If local solution > current optimal solution, replace
             if v[1] > best[1]:
                 best = v
 
+        #If upper bound > current optimal solution, continue branching
         if nodeBoundR > best[1]:
             enum_list += [nodeR]
             enum_list, best = bnb(nvar, new_preferences, candidates, nodeR, enum_list, best, i)
@@ -138,7 +139,7 @@ def sol(node, candidates, remaining_prefs):
 
 def find_axes(nodeSet, candidates):
     """
-    Returns all possible coherent axes
+    Returns coherent axes with given ballot set
     :param nodeSet: Current node ([ballot_set], upper_bound)
     :param candidates: List of candidates
     :return: List of possible axes, False if none found
@@ -161,8 +162,6 @@ def find_axes(nodeSet, candidates):
     axes = P(L)
     for ballot in ballots:
         try:
-            #print ("Align according to ballot : " + str(ballot))
-            #print ("Axes :" + str(axes))
             axes.set_contiguous(ballot)
         except:
             return False, 0
@@ -172,7 +171,6 @@ def find_axes(nodeSet, candidates):
         A = []
         for ballot_set in flatten(axis):
             if ballot_set:
-                #A += [i+1 for i, x in enumerate(L) if x == ballot_set]
                 A += [candL.index(ballot_set)+1]
         all_axes += [A]
     axes_filtered = filter_symmetric_axes(all_axes)
@@ -186,7 +184,6 @@ def find_axes2(nodeSet, candidates):
     :return: List of possible axes, False if none found
     """
     L = []
-    candL = []
     ballots = transform_ballots(nodeSet)
     # Regrouper les bulletins qui contiennent le candidat c
     for c in candidates:
@@ -209,7 +206,6 @@ def find_axes2(nodeSet, candidates):
     for axis in axes.orderings():
         A = []
         for ballot_set in flatten(axis):
-            #A += [i+1 for i, x in enumerate(L) if x == ballot_set]
             A += [L.index(ballot_set)+1]
         all_axes += [A]
     axes_filtered = filter_symmetric_axes(all_axes)
@@ -223,23 +219,6 @@ def is_coherent(ballot, axes):
     :return: True if the ballot is coherent with the axis
     """
     return any(ballot == Set(axes[i:i + len(ballot)]) for i in range(len(axes) - len(ballot) + 1))
-
-def add_coherent_ballots(node, remaining_prefs, axes):
-    """
-    Adds the remaining ballots that are coherent with the axis to node
-    :param node: Current node ([ballot_set], upper_bound)
-    :param remaining_prefs: List of remaining ballots in preferances
-    :param axes: List of axes (in this case, only one axis)
-    :return: List of ballots
-    """
-    for (nb_voters, prefs) in remaining_prefs:
-        if isinstance(prefs[-1], int):
-            ballot = Set(prefs)
-        else:
-            ballot = Set(prefs[:-1])
-        if is_coherent(ballot, axes[0]):
-            node = (node[0] + [(nb_voters, prefs)], node[1])
-    return node
 
 def sum_nb_voters(prefs, remaining_prefs):
     """
@@ -256,12 +235,22 @@ def sum_nb_voters(prefs, remaining_prefs):
     return bound
 
 def nodes(n):
+    """
+    Calcultes the number of nodes in a graph of n ballots
+    :param n: number of ballots
+    :return: number of nodes
+    """
     t_nodes = 0
     for i in range(n):
         t_nodes += 2**(i+1)
     return t_nodes
 
 def remove_last_ballots(preferences):
+    """
+    Remove last ballots of preferences
+    :param preferences: List of ballots
+    :return: Reuced list of ballots, the total number of ballots, the number of unique ballots
+    """
     filtered = []
     unique = 0
     total = 0
@@ -272,32 +261,7 @@ def remove_last_ballots(preferences):
             unique += 1
     return filtered, total, unique
 
-def exemple():
-    preferences = [(9, [1, 2, 3, Set([4,5,6])]),
-                   (5, [Set([1,2,3,4,5])]),
-                   (2, [2, 3, Set([1,4,5,6])])]
-    candidates = [i+1 for i in range(6)]
-    print("Preferences : " + str(preferences))
-    print("Candidats : " + str(candidates))
-    t1 = time()
-    bb, best = bnb(len(preferences), preferences, candidates)
-    t2 = time()
-    print("done")
-    f = "resultat.txt"
-    wfile = open(f, 'w')
-    wfile.write("Plus large ensemble cohérent : ")
-    for bull in best[0][0]:
-        wfile.write(str(bull) + "\n")
-    wfile.write("Resultat : " + str(best[1]) + "\n")
-    wfile.write("Duration : " + str(t2-t1) + "\n")
-    wfile.write("Axes :\n")
-    axes, card = find_axes2(best[0][0], candidates)
-    if axes:
-        for a in axes:
-            wfile.write(str(a)+"\n")
-    wfile.close()
-
-def exemple_generation():
+def example_generation():
     structures, candidates = generation(8, 10)
     candidates = [i+1 for i in range(8)]
     preferences = structures["preferences"]
@@ -311,7 +275,7 @@ def exemple_generation():
     print("Duration : " + str(t2-t1))
     print("On explore " + str(len(bb)) + " noeuds parmi " + str(nodes(len(preferences))) + " noeuds.")
 
-def exemple_file():
+def example_file():
     structure = read_file(sys.argv[1])
     preferences = structure["preferences"]
     candidates = [i+1 for i in range(len(structure["candidates"]))]
@@ -335,7 +299,7 @@ def exemple_file():
             wfile.write(str(a)+"\n")
     wfile.close()
 
-def exemple_all_files():
+def example_all_files():
     structure = read_directory(sys.argv[1])
     preferences = structure["preferences"]
     candidates = [i+1 for i in range(len(structure["candidates"]))]
@@ -359,7 +323,7 @@ def exemple_all_files():
             wfile.write(str(a)+"\n")
     wfile.close()
 
-def exemple_filtered():
+def example_filtered():
     structure = read_file(sys.argv[1])
     preferences_bis = structure["preferences"]
     preferences, nb_voters, uniq = remove_last_ballots(preferences_bis)
@@ -385,7 +349,7 @@ def exemple_filtered():
     wfile.close()
 
 if __name__ == '__main__':
-    #exemple()
-    #exemple_file()
-    #exemple_all_files()
-    exemple_filtered()
+    #example()
+    #example_file()
+    #example_all_files()
+    example_filtered()
