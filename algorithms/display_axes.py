@@ -203,5 +203,5 @@ def launch_french():
 
 
 if __name__ == '__main__':
-    # launch_irish_glasgow()
-    launch_french()
+    launch_irish_glasgow()
+    # launch_french()

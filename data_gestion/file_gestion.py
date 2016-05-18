@@ -174,7 +174,7 @@ def read_directory(dirname, strict=False):
         for pref in temp_struct["preferences"]:
             if pref[1] in unique_orders:
                 i = unique_orders.index(pref[1])
-                structure["preferences"][i][0] += pref[0]
+                structure["preferences"][i] = (structure["preferences"][i][0] + pref[0], pref[1])
             else:
                 structure["preferences"].append(pref)
                 structure["nb_unique_orders"] += 1
